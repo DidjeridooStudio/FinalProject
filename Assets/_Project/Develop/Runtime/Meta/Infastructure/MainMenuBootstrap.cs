@@ -1,10 +1,10 @@
 using System.Collections;
-using UnityEngine;
 
 public class MainMenuBootstrap : SceneBootstrap
 {
     private DIContainer _container;
     private ModeSelectionService _modeSelectionService;
+    private ProgressManagementService _progressManagementService;
 
     public override void ProcessRegistrations(DIContainer container, IInputSceneArgs sceneArgs = null)
     {
@@ -21,18 +21,15 @@ public class MainMenuBootstrap : SceneBootstrap
     public override void Run()
     {
         _modeSelectionService = _container.Resolve<ModeSelectionService>();
+        _progressManagementService = _container.Resolve<ProgressManagementService>();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            _modeSelectionService.Select(ModeTypes.Numbers);
-        }
+        if (_modeSelectionService != null)
+            _modeSelectionService.Update();
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            _modeSelectionService.Select(ModeTypes.Letters);
-        }
+        if (_progressManagementService != null)
+            _progressManagementService.Update();
     }
 }

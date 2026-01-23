@@ -8,6 +8,8 @@ public class LevelConfig : ScriptableObject
 {
     [SerializeField] private List<ModeTypesConfig> _values;
     [field: SerializeField] public int SymbolsQuanity { get; private set; }
+    [field: SerializeField] public int MoneyBet { get; private set; }
+    [field: SerializeField] public int MoneyToResetProgress { get; private set; }
 
     public string GetValueFor(ModeTypes type) => _values.First(config => config.Type == type).SymbolSet;
 

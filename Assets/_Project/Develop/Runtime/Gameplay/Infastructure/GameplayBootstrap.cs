@@ -28,7 +28,7 @@ public class GameplayBootstrap : SceneBootstrap
     public override void Run()
     {
         _gameplayCircle = _container.Resolve<GameplayCircle>();
-        _gameplayCircle.Prepare(_inputArgs);
+        _gameplayCircle.Prepare();
         _gameplayCircle.Launch();
     }
 

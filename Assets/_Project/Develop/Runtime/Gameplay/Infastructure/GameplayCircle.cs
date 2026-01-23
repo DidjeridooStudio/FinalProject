@@ -7,30 +7,42 @@ public class GameplayCircle : IDisposable
     private ICoroutinesPerformer _coroutinesPerformer;
     private GenerateRandomStringService _generateRandomStringService;
     private ReadUserInputService _userInputService;
+    private WalletService _walletService;
+    private ProgressionService _progressionService;
+    private GameplayInputArgs _inputArgs;
+    private PlayerDataProvider _playerDataProvider;
 
-    private string _symbolSet;
-    private int _symbolsQuanity;
     private GameMode _gameMode;
     private bool _hasVictory;
 
-    public GameplayCircle(ScenesSwitcherService scenesSwitcherService, ICoroutinesPerformer coroutinesPerformer, GenerateRandomStringService generateRandomStringService, ReadUserInputService userInputService)
+    public GameplayCircle(
+        ScenesSwitcherService scenesSwitcherService,
+        ICoroutinesPerformer coroutinesPerformer,
+        GenerateRandomStringService generateRandomStringService,
+        ReadUserInputService userInputService,
+        ProgressionService progressionService,
+        WalletService walletService,
+        GameplayInputArgs args,
+        PlayerDataProvider playerDataProvider)
     {
         _scenesSwitcherService = scenesSwitcherService;
         _coroutinesPerformer = coroutinesPerformer;
         _generateRandomStringService = generateRandomStringService;
         _userInputService = userInputService;
+        _progressionService = progressionService;
+        _walletService = walletService;
+        _inputArgs = args;
+        _playerDataProvider = playerDataProvider;
     }
 
-    public void Prepare(GameplayInputArgs args)
+    public void Prepare()
     {
-        _symbolSet = args.SymbolSet;
-        _symbolsQuanity = args.SymbolsQuanity;
-        _generateRandomStringService.Prepare(_symbolSet, _symbolsQuanity);
+
     }
 
     public void Launch()
     {
-        _gameMode = new GameMode(_generateRandomStringService, _userInputService, _symbolsQuanity);
+        _gameMode = new GameMode(_generateRandomStringService, _userInputService, _inputArgs.SymbolsQuanity);
 
         _gameMode.Victory += OnGameModeVictory;
         _gameMode.Defeat += OnGameModeDefeat;
@@ -42,17 +54,22 @@ public class GameplayCircle : IDisposable
     {
         _gameMode?.Update(deltaTime);
 
+        if (_walletService.GetCurrency(CurrencyTypes.Gold).Value == 0)
+            RunningOutMoneyDefeat();
+
         if (Input.GetKeyUp(KeyCode.Space) && _gameMode.IsRunning == false)
         {
             if (_hasVictory)
                 SwitchScene(Scenes.MainMenu);
             else
-                SwitchScene(Scenes.Gameplay, new GameplayInputArgs(_symbolSet, _symbolsQuanity));
+                SwitchScene(Scenes.Gameplay, new GameplayInputArgs(_inputArgs.SymbolSet, _inputArgs.SymbolsQuanity, _inputArgs.MoneyBet));
         }
     }
 
     private void OnGameModeEnded()
     {
+        _coroutinesPerformer.StartPerform(_playerDataProvider.Save());
+
         if (_gameMode != null)
         {
             _gameMode.Victory -= OnGameModeVictory;
@@ -66,6 +83,13 @@ public class GameplayCircle : IDisposable
 
         _hasVictory = true;
 
+        _walletService.AddCurrency(CurrencyTypes.Gold, _inputArgs.MoneyBet);
+
+        _progressionService.IncreaseWinnings();
+
+        Debug.Log("Gold " + _walletService.GetCurrency(CurrencyTypes.Gold).Value);
+        Debug.Log("Winnings " + _progressionService.WinningsQuantity);
+
         OnGameModeEnded();
     }
 
@@ -75,12 +99,35 @@ public class GameplayCircle : IDisposable
 
         _hasVictory = false;
 
+        if (_walletService.EnoughCurrency(CurrencyTypes.Gold, _inputArgs.MoneyBet))
+            _walletService.SpendCurrency(CurrencyTypes.Gold, _inputArgs.MoneyBet);
+        else
+            _walletService.SpendCurrency(CurrencyTypes.Gold, _walletService.GetCurrency(CurrencyTypes.Gold).Value);
+
+        _progressionService.IncreaseLosses();
+
+        Debug.Log("Gold " + _walletService.GetCurrency(CurrencyTypes.Gold).Value);
+        Debug.Log("Losses " + _progressionService.LossesQuantity);
+
         OnGameModeEnded();
     }
 
     private void SwitchScene(string sceneName, IInputSceneArgs sceneArgs = null)
     {
         _coroutinesPerformer.StartPerform(_scenesSwitcherService.ProcessSwitchTo(sceneName, sceneArgs));
+    }
+
+    private void RunningOutMoneyDefeat()
+    {
+        Debug.Log("Вы проиграли все свои деньги. Весь прогресс был сброшен");
+
+        _progressionService.Reset();
+
+        _walletService.ResetToStartConfig();
+
+        OnGameModeEnded();
+
+        SwitchScene(Scenes.MainMenu);
     }
 
     #region Interface

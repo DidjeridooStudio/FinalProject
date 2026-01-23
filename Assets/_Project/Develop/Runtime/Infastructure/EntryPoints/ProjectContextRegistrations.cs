@@ -8,6 +8,7 @@ public class ProjectContextRegistrations
     public static void Process(DIContainer container)
     {
         container.RegisterAsSingle(CreatePlayerDataProvider);
+        container.RegisterAsSingle(CreateProgressionService).NonLazy();
         container.RegisterAsSingle(CreateSaveLoadService);
         container.RegisterAsSingle(CreateWalletService).NonLazy();
         container.RegisterAsSingle(CreateScenesLoaderService);
@@ -17,6 +18,8 @@ public class ProjectContextRegistrations
         container.RegisterAsSingle(CreateResourcesAssetsLoader);
         container.RegisterAsSingle<ICoroutinesPerformer>(CreateCoroutinesPerformer);
     }
+
+    private static ProgressionService CreateProgressionService(DIContainer container) => new ProgressionService(container.Resolve<PlayerDataProvider>());
 
     private static PlayerDataProvider CreatePlayerDataProvider(DIContainer container)
     {
@@ -45,7 +48,9 @@ public class ProjectContextRegistrations
         foreach (CurrencyTypes currencyType in Enum.GetValues(typeof(CurrencyTypes)))
             currencies.Add(currencyType, new ReactiveVariable<int>());
 
-        return new WalletService(currencies, container.Resolve<PlayerDataProvider>());
+        ConfigsProviderService configsProviderService = container.Resolve<ConfigsProviderService>();
+
+        return new WalletService(currencies, container.Resolve<PlayerDataProvider>(), configsProviderService);
     }
 
     private static ScenesLoaderService CreateScenesLoaderService(DIContainer container)

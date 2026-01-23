@@ -43,7 +43,7 @@ public class GameMode
         if (_userString.Length < _symbolsQuanity)
             return;
 
-        Debug.Log("Вы ввели" + _userString);
+        Debug.Log("Вы ввели " + _userString);
 
         if (_userString == _randomString)
             ProcessVictory();

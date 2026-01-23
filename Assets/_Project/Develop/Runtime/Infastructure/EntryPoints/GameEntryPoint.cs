@@ -37,7 +37,7 @@ public class GameEntryPoint : MonoBehaviour
         yield return playerDataProvider.Exists(result => isPlayerDataSaveExists = result);
 
         if (isPlayerDataSaveExists)
-            playerDataProvider.Load();
+            yield return playerDataProvider.Load();
         else
             playerDataProvider.Reset();
 

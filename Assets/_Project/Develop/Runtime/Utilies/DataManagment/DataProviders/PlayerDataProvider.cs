@@ -15,6 +15,8 @@ public class PlayerDataProvider : DataProvider<PlayerData>
         return new PlayerData()
         {
             WalletData = InitWalletData(),
+            WinningsQuantity = 0,
+            LossesQuantity = 0,
         };
     }
 

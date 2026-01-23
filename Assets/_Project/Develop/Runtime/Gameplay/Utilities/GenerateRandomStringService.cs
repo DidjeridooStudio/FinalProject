@@ -7,7 +7,7 @@ public class GenerateRandomStringService
 
     private string _randomString;
 
-    public void Prepare(string symbolSet, int symbolsQuanity)
+    public GenerateRandomStringService(string symbolSet, int symbolsQuanity)
     {
         _symbolSet = symbolSet;
         _symbolsQuanity = symbolsQuanity;

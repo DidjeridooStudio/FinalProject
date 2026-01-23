@@ -1,4 +1,6 @@
 
+using UnityEngine;
+
 public class ModeSelectionService
 {
     private readonly ConfigsProviderService _configsProviderService;
@@ -10,6 +12,19 @@ public class ModeSelectionService
         _configsProviderService = configsProviderService;
         _scenesSwitcherService = scenesSwitcherService;
         _coroutinesPerformer = coroutinesPerformer;
+    }
+
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Select(ModeTypes.Numbers);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Select(ModeTypes.Letters);
+        }
     }
 
     public void Select(ModeTypes mode)
@@ -30,6 +45,6 @@ public class ModeSelectionService
                 break;
         }
 
-        _coroutinesPerformer.StartPerform(_scenesSwitcherService.ProcessSwitchTo(Scenes.Gameplay, new GameplayInputArgs(symbolSet, levelConfig.SymbolsQuanity)));
+        _coroutinesPerformer.StartPerform(_scenesSwitcherService.ProcessSwitchTo(Scenes.Gameplay, new GameplayInputArgs(symbolSet, levelConfig.SymbolsQuanity, levelConfig.MoneyBet)));
     }
 }
