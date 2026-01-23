@@ -1,15 +1,51 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 public class ProjectContextRegistrations
 {
     public static void Process(DIContainer container)
     {
+        container.RegisterAsSingle(CreatePlayerDataProvider);
+        container.RegisterAsSingle(CreateSaveLoadService);
+        container.RegisterAsSingle(CreateWalletService).NonLazy();
         container.RegisterAsSingle(CreateScenesLoaderService);
         container.RegisterAsSingle(CreateScenesSwitcherService);
         container.RegisterAsSingle<ILoadingScreen>(CreateStandartLoadingScreen);
         container.RegisterAsSingle(CreateConfigsProviderService);
         container.RegisterAsSingle(CreateResourcesAssetsLoader);
         container.RegisterAsSingle<ICoroutinesPerformer>(CreateCoroutinesPerformer);
+    }
+
+    private static PlayerDataProvider CreatePlayerDataProvider(DIContainer container)
+    {
+        ISaveLoadService saveLoadService = container.Resolve<SaveLoadService>();
+        ConfigsProviderService configsProviderService = container.Resolve<ConfigsProviderService>();
+
+        return new PlayerDataProvider(saveLoadService, configsProviderService);
+    }
+
+    private static SaveLoadService CreateSaveLoadService(DIContainer container)
+    {
+        IDataSerializer serializer = new JsonSerializer();
+        IDataKeyStorage keyStorage = new MapDataKeyStorage();
+
+        string saveFolderPath = Application.persistentDataPath;
+
+        IDataRepository repository = new LocalFileDataRepository(saveFolderPath, "json");
+
+        return new SaveLoadService(serializer, keyStorage, repository);
+    }
+
+    private static WalletService CreateWalletService(DIContainer container)
+    {
+        Dictionary<CurrencyTypes, ReactiveVariable<int>> currencies = new Dictionary<CurrencyTypes, ReactiveVariable<int>>();
+
+        foreach (CurrencyTypes currencyType in Enum.GetValues(typeof(CurrencyTypes)))
+            currencies.Add(currencyType, new ReactiveVariable<int>());
+
+        return new WalletService(currencies, container.Resolve<PlayerDataProvider>());
     }
 
     private static ScenesLoaderService CreateScenesLoaderService(DIContainer container)

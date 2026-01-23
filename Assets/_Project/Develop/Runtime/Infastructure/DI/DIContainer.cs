@@ -12,13 +12,15 @@ public class DIContainer
 
     public DIContainer(DIContainer parent) => _parent = parent;
 
-    public void RegisterAsSingle<T>(Func<DIContainer, T> creator)
+    public IRegistrationOptions RegisterAsSingle<T>(Func<DIContainer, T> creator)
     {
         if (IsAlreadyRegister<T>())
             throw new InvalidOperationException($"{typeof(T)} is already registered");
 
         Registration registration = new Registration(container => creator.Invoke(container));
         _container.Add(typeof(T), registration);
+
+        return registration;
     }
 
     public bool IsAlreadyRegister<T>()
@@ -53,5 +55,14 @@ public class DIContainer
         }
 
         throw new InvalidOperationException($"Registration for {typeof(T)} not exist");
+    }
+
+    public void Initialize()
+    {
+        foreach (Registration registration in _container.Values)
+        {
+            if (registration.IsNonLazy)
+                registration.CreateInstanceFrom(this);
+        }
     }
 }

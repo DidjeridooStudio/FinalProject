@@ -1,9 +1,11 @@
 ﻿using System;
 
-public class Registration
+public class Registration : IRegistrationOptions
 {
     private Func<DIContainer, object> _creator;
     private object _cashedInstance;
+
+    public bool IsNonLazy { get; private set; }
 
     public Registration(Func<DIContainer, object> creator) => _creator = creator;
 
@@ -19,4 +21,10 @@ public class Registration
 
         return _cashedInstance;
     }
+
+    #region Interface
+
+    public void NonLazy() => IsNonLazy = true;
+
+    #endregion
 }

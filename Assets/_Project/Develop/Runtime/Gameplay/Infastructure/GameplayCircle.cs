@@ -3,26 +3,34 @@ using UnityEngine;
 
 public class GameplayCircle : IDisposable
 {
-    private string _symbolSet;
-    private GameMode _gameMode;
-    private DIContainer _container;
+    private ScenesSwitcherService _scenesSwitcherService;
+    private ICoroutinesPerformer _coroutinesPerformer;
+    private GenerateRandomStringService _generateRandomStringService;
+    private ReadUserInputService _userInputService;
 
+    private string _symbolSet;
+    private int _symbolsQuanity;
+    private GameMode _gameMode;
     private bool _hasVictory;
 
-    public GameplayCircle(string symbolSet, DIContainer container)
+    public GameplayCircle(ScenesSwitcherService scenesSwitcherService, ICoroutinesPerformer coroutinesPerformer, GenerateRandomStringService generateRandomStringService, ReadUserInputService userInputService)
     {
-        _symbolSet = symbolSet;
-        _container = container;
+        _scenesSwitcherService = scenesSwitcherService;
+        _coroutinesPerformer = coroutinesPerformer;
+        _generateRandomStringService = generateRandomStringService;
+        _userInputService = userInputService;
     }
 
-    public void Prepare()
+    public void Prepare(GameplayInputArgs args)
     {
-        
+        _symbolSet = args.SymbolSet;
+        _symbolsQuanity = args.SymbolsQuanity;
+        _generateRandomStringService.Prepare(_symbolSet, _symbolsQuanity);
     }
 
     public void Launch()
     {
-        _gameMode = new GameMode(_symbolSet);
+        _gameMode = new GameMode(_generateRandomStringService, _userInputService, _symbolsQuanity);
 
         _gameMode.Victory += OnGameModeVictory;
         _gameMode.Defeat += OnGameModeDefeat;
@@ -39,7 +47,7 @@ public class GameplayCircle : IDisposable
             if (_hasVictory)
                 SwitchScene(Scenes.MainMenu);
             else
-                SwitchScene(Scenes.Gameplay, new GameplayInputArgs(_symbolSet));
+                SwitchScene(Scenes.Gameplay, new GameplayInputArgs(_symbolSet, _symbolsQuanity));
         }
     }
 
@@ -72,9 +80,7 @@ public class GameplayCircle : IDisposable
 
     private void SwitchScene(string sceneName, IInputSceneArgs sceneArgs = null)
     {
-        ScenesSwitcherService scenesSwitcherService = _container.Resolve<ScenesSwitcherService>();
-
-        _container.Resolve<ICoroutinesPerformer>().StartPerform(scenesSwitcherService.ProcessSwitchTo(sceneName, sceneArgs));
+        _coroutinesPerformer.StartPerform(_scenesSwitcherService.ProcessSwitchTo(sceneName, sceneArgs));
     }
 
     #region Interface

@@ -11,6 +11,8 @@ public class GameEntryPoint : MonoBehaviour
 
         ProjectContextRegistrations.Process(projectContainer);
 
+        projectContainer.Initialize();
+
         projectContainer.Resolve<ICoroutinesPerformer>().StartPerform(Initialize(projectContainer));
     }
 
@@ -24,10 +26,20 @@ public class GameEntryPoint : MonoBehaviour
     {
         ILoadingScreen loadingScreen = container.Resolve<ILoadingScreen>();
         ScenesSwitcherService scenesSwitcherService = container.Resolve<ScenesSwitcherService>();
+        PlayerDataProvider playerDataProvider = container.Resolve<PlayerDataProvider>();
 
         loadingScreen.Show();
 
         yield return container.Resolve<ConfigsProviderService>().LoadAsync();
+
+        bool isPlayerDataSaveExists = false;
+
+        yield return playerDataProvider.Exists(result => isPlayerDataSaveExists = result);
+
+        if (isPlayerDataSaveExists)
+            playerDataProvider.Load();
+        else
+            playerDataProvider.Reset();
 
         yield return new WaitForSeconds(1);
 

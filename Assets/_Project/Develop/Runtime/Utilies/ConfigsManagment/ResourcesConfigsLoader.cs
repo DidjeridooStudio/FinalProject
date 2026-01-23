@@ -8,8 +8,8 @@ public class ResourcesConfigsLoader : IConfigsLoader
     private readonly ResourcesAssetsLoader _resourcesAssetsLoader;
     private readonly Dictionary<Type, string> _configsResourcesPaths = new Dictionary<Type, string>()
     {
-        {typeof(LettersConfig), "Configs/LettersConfig" },
-        {typeof(NumbersConfig), "Configs/NumbersConfig" }
+        {typeof(LevelConfig), "Configs/LevelConfig" },
+        {typeof(StartWalletConfig), "Configs/StartWalletConfig" },
     };
 
     public ResourcesConfigsLoader(ResourcesAssetsLoader resourcesAssetsLoader)
