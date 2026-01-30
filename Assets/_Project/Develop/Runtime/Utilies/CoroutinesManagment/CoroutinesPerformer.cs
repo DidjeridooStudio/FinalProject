@@ -1,15 +1,18 @@
 using System.Collections;
 using UnityEngine;
 
-public class CoroutinesPerformer : MonoBehaviour, ICoroutinesPerformer
+namespace Assets._Project.Develop.Runtime.Utilies.CoroutinesManagment
 {
-    private void Awake() => DontDestroyOnLoad(this);
+    public class CoroutinesPerformer : MonoBehaviour, ICoroutinesPerformer
+    {
+        private void Awake() => DontDestroyOnLoad(this);
 
-    #region Interface
+        #region Interface
 
-    public Coroutine StartPerform(IEnumerator coroutine) => StartCoroutine(coroutine);
+        public Coroutine StartPerform(IEnumerator coroutine) => StartCoroutine(coroutine);
 
-    public void StopPerform(IEnumerator coroutine) => StopCoroutine(coroutine);
+        public void StopPerform(Coroutine coroutine) => StopCoroutine(coroutine);
 
-    #endregion
+        #endregion
+    }
 }

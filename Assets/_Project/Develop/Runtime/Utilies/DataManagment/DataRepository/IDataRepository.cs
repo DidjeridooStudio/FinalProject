@@ -1,10 +1,13 @@
 using System;
 using System.Collections;
 
-public interface IDataRepository
+namespace Assets._Project.Develop.Runtime.Utilies.DataManagment.DataRepository
 {
-    IEnumerator Read(string key, Action<string> onRead);
-    IEnumerator Write(string key, string serializedData);
-    IEnumerator Remove(string key);
-    IEnumerator Exists(string key, Action<bool> onExistsResult);
+    public interface IDataRepository
+    {
+        IEnumerator Read(string key, Action<string> onRead);
+        IEnumerator Write(string key, string serializedData);
+        IEnumerator Remove(string key);
+        IEnumerator Exists(string key, Action<bool> onExistsResult);
+    }
 }

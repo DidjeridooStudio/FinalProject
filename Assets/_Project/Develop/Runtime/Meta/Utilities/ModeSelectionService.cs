@@ -1,50 +1,57 @@
-
+using Assets._Project.Develop.Runtime.Configs.Meta;
+using Assets._Project.Develop.Runtime.Gameplay.Infastructure;
+using Assets._Project.Develop.Runtime.Utilies.ConfigsManagment;
+using Assets._Project.Develop.Runtime.Utilies.CoroutinesManagment;
+using Assets._Project.Develop.Runtime.Utilies.ScenesManagment;
 using UnityEngine;
 
-public class ModeSelectionService
+namespace Assets._Project.Develop.Runtime.Meta.Utilities
 {
-    private readonly ConfigsProviderService _configsProviderService;
-    private readonly ScenesSwitcherService _scenesSwitcherService;
-    private readonly ICoroutinesPerformer _coroutinesPerformer;
-
-    public ModeSelectionService(ConfigsProviderService configsProviderService, ScenesSwitcherService scenesSwitcherService, ICoroutinesPerformer coroutinesPerformer)
+    public class ModeSelectionService
     {
-        _configsProviderService = configsProviderService;
-        _scenesSwitcherService = scenesSwitcherService;
-        _coroutinesPerformer = coroutinesPerformer;
-    }
+        private readonly ConfigsProviderService _configsProviderService;
+        private readonly ScenesSwitcherService _scenesSwitcherService;
+        private readonly ICoroutinesPerformer _coroutinesPerformer;
 
-    public void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        public ModeSelectionService(ConfigsProviderService configsProviderService, ScenesSwitcherService scenesSwitcherService, ICoroutinesPerformer coroutinesPerformer)
         {
-            Select(ModeTypes.Numbers);
+            _configsProviderService = configsProviderService;
+            _scenesSwitcherService = scenesSwitcherService;
+            _coroutinesPerformer = coroutinesPerformer;
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        public void Update()
         {
-            Select(ModeTypes.Letters);
-        }
-    }
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                Select(ModeTypes.Numbers);
+            }
 
-    public void Select(ModeTypes mode)
-    {
-        LevelConfig levelConfig = _configsProviderService.GetConfig<LevelConfig>();
-
-        string symbolSet = string.Empty;
-
-        switch (mode)
-        {
-            case ModeTypes.Letters:
-                symbolSet = levelConfig.GetValueFor(ModeTypes.Letters);
-                break;
-            case ModeTypes.Numbers:
-                symbolSet = levelConfig.GetValueFor(ModeTypes.Numbers);
-                break;
-            default:
-                break;
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                Select(ModeTypes.Letters);
+            }
         }
 
-        _coroutinesPerformer.StartPerform(_scenesSwitcherService.ProcessSwitchTo(Scenes.Gameplay, new GameplayInputArgs(symbolSet, levelConfig.SymbolsQuanity, levelConfig.MoneyBet)));
+        public void Select(ModeTypes mode)
+        {
+            LevelConfig levelConfig = _configsProviderService.GetConfig<LevelConfig>();
+
+            string symbolSet = string.Empty;
+
+            switch (mode)
+            {
+                case ModeTypes.Letters:
+                    symbolSet = levelConfig.GetValueFor(ModeTypes.Letters);
+                    break;
+                case ModeTypes.Numbers:
+                    symbolSet = levelConfig.GetValueFor(ModeTypes.Numbers);
+                    break;
+                default:
+                    break;
+            }
+
+            _coroutinesPerformer?.StartPerform(_scenesSwitcherService.ProcessSwitchTo(Scenes.Gameplay, new GameplayInputArgs(symbolSet, levelConfig.SymbolsQuanity, levelConfig.MoneyBet)));
+        }
     }
 }

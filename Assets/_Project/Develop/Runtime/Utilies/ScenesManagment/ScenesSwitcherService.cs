@@ -1,43 +1,52 @@
+using Assets._Project.Develop.Runtime.Infastructure;
+using Assets._Project.Develop.Runtime.Infastructure.DI;
+using Assets._Project.Develop.Runtime.Utilies.LoadingScreen;
 using System;
 using System.Collections;
-using UnityEngine;
 using Object = UnityEngine.Object;
 
-public class ScenesSwitcherService
+namespace Assets._Project.Develop.Runtime.Utilies.ScenesManagment
 {
-    private readonly ScenesLoaderService _scenesLoaderService;
-    private readonly ILoadingScreen _loadingScreen;
-    private readonly DIContainer _projectContainer;
-
-    public ScenesSwitcherService(ScenesLoaderService scenesLoaderService, ILoadingScreen loadingScreen, DIContainer projectContainer)
+    public class ScenesSwitcherService
     {
-        _scenesLoaderService = scenesLoaderService;
-        _loadingScreen = loadingScreen;
-        _projectContainer = projectContainer;
-    }
+        private readonly ScenesLoaderService _scenesLoaderService;
+        private readonly ILoadingScreen _loadingScreen;
+        private readonly DIContainer _projectContainer;
 
-    public IEnumerator ProcessSwitchTo(string sceneName, IInputSceneArgs sceneArgs = null)
-    {
-        _loadingScreen.Show();
+        private DIContainer _currentSceneContainer;
 
-        yield return _scenesLoaderService.LoadAsync(Scenes.Empty);
-        yield return _scenesLoaderService.LoadAsync(sceneName);
+        public ScenesSwitcherService(ScenesLoaderService scenesLoaderService, ILoadingScreen loadingScreen, DIContainer projectContainer)
+        {
+            _scenesLoaderService = scenesLoaderService;
+            _loadingScreen = loadingScreen;
+            _projectContainer = projectContainer;
+        }
 
-        SceneBootstrap sceneBootstrap = Object.FindObjectOfType<SceneBootstrap>();
+        public IEnumerator ProcessSwitchTo(string sceneName, IInputSceneArgs sceneArgs = null)
+        {
+            _loadingScreen.Show();
 
-        if (sceneBootstrap == null)
-            throw new NullReferenceException(nameof(sceneBootstrap) + " not found");
+            _currentSceneContainer?.Dispose();
 
-        DIContainer sceneContainer = new DIContainer(_projectContainer);
+            yield return _scenesLoaderService.LoadAsync(Scenes.Empty);
+            yield return _scenesLoaderService.LoadAsync(sceneName);
 
-        sceneBootstrap.ProcessRegistrations(sceneContainer, sceneArgs);
+            SceneBootstrap sceneBootstrap = Object.FindObjectOfType<SceneBootstrap>();
 
-        sceneContainer.Initialize();
+            if (sceneBootstrap == null)
+                throw new NullReferenceException(nameof(sceneBootstrap) + " not found");
 
-        yield return sceneBootstrap.Initialize();
+            _currentSceneContainer = new DIContainer(_projectContainer);
 
-        _loadingScreen.Hide();
+            sceneBootstrap.ProcessRegistrations(_currentSceneContainer, sceneArgs);
 
-        sceneBootstrap.Run();
+            _currentSceneContainer.Initialize();
+
+            yield return sceneBootstrap.Initialize();
+
+            _loadingScreen.Hide();
+
+            sceneBootstrap.Run();
+        }
     }
 }

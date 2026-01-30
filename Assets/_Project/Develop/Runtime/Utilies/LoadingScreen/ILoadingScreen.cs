@@ -1,7 +1,9 @@
-
-public interface ILoadingScreen
+namespace Assets._Project.Develop.Runtime.Utilies.LoadingScreen
 {
-    bool IsShown { get; }
-    void Show();
-    void Hide();
+    public interface ILoadingScreen
+    {
+        bool IsShown { get; }
+        void Show();
+        void Hide();
+    }
 }

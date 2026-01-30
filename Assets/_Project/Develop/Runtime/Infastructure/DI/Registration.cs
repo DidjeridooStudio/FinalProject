@@ -1,30 +1,47 @@
 ﻿using System;
 
-public class Registration : IRegistrationOptions
+namespace Assets._Project.Develop.Runtime.Infastructure.DI
 {
-    private Func<DIContainer, object> _creator;
-    private object _cashedInstance;
-
-    public bool IsNonLazy { get; private set; }
-
-    public Registration(Func<DIContainer, object> creator) => _creator = creator;
-
-    public object CreateInstanceFrom(DIContainer container)
+    public class Registration : IRegistrationOptions
     {
-        if (_cashedInstance != null)
+        private Func<DIContainer, object> _creator;
+        private object _cashedInstance;
+
+        public bool IsNonLazy { get; private set; }
+
+        public Registration(Func<DIContainer, object> creator) => _creator = creator;
+
+        public object CreateInstanceFrom(DIContainer container)
+        {
+            if (_cashedInstance != null)
+                return _cashedInstance;
+
+            if (_creator == null)
+                throw new InvalidOperationException("Not has instance or creator");
+
+            _cashedInstance = _creator.Invoke(container);
+
             return _cashedInstance;
+        }
 
-        if (_creator == null)
-            throw new InvalidOperationException("Not has instance or creator");
+        public void OnInitialize()
+        {
+            if (_cashedInstance != null)
+                if (_cashedInstance is IInitializable initializable)
+                    initializable.Initialize();
+        }
 
-        _cashedInstance = _creator.Invoke(container);
+        public void OnDisposable()
+        {
+            if (_cashedInstance != null)
+                if (_cashedInstance is IDisposable disposable)
+                    disposable.Dispose();
+        }
 
-        return _cashedInstance;
+        #region Interface
+
+        public void NonLazy() => IsNonLazy = true;
+
+        #endregion
     }
-
-    #region Interface
-
-    public void NonLazy() => IsNonLazy = true;
-
-    #endregion
 }

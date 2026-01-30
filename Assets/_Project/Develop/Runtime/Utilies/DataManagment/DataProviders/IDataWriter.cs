@@ -1,5 +1,7 @@
-
-public interface IDataWriter<TData> where TData : ISaveData
+namespace Assets._Project.Develop.Runtime.Utilies.DataManagment.DataProviders
 {
-    void WriteTo(TData data);
+    public interface IDataWriter<TData> where TData : ISaveData
+    {
+        void WriteTo(TData data);
+    }
 }

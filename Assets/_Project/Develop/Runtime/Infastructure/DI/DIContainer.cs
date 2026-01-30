@@ -1,68 +1,79 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class DIContainer
+namespace Assets._Project.Develop.Runtime.Infastructure.DI
 {
-    private readonly Dictionary<Type, Registration> _container = new Dictionary<Type, Registration>();
-    private readonly List<Type> _requests = new List<Type>();
-
-    private readonly DIContainer _parent;
-
-    public DIContainer() : this(null) { }
-
-    public DIContainer(DIContainer parent) => _parent = parent;
-
-    public IRegistrationOptions RegisterAsSingle<T>(Func<DIContainer, T> creator)
+    public class DIContainer
     {
-        if (IsAlreadyRegister<T>())
-            throw new InvalidOperationException($"{typeof(T)} is already registered");
+        private readonly Dictionary<Type, Registration> _container = new Dictionary<Type, Registration>();
+        private readonly List<Type> _requests = new List<Type>();
 
-        Registration registration = new Registration(container => creator.Invoke(container));
-        _container.Add(typeof(T), registration);
+        private readonly DIContainer _parent;
 
-        return registration;
-    }
+        public DIContainer() : this(null) { }
 
-    public bool IsAlreadyRegister<T>()
-    {
-        if (_container.ContainsKey(typeof(T)))
-            return true;
+        public DIContainer(DIContainer parent) => _parent = parent;
 
-        if (_parent != null)
-            return _parent.IsAlreadyRegister<T>();
-
-        return false;
-    }
-
-    public T Resolve<T>()
-    {
-        if (_requests.Contains(typeof(T)))
-            throw new InvalidOperationException($"Cycle resolve for {typeof(T)}");
-
-        _requests.Add(typeof(T));
-
-        try
+        public IRegistrationOptions RegisterAsSingle<T>(Func<DIContainer, T> creator)
         {
-            if (_container.TryGetValue(typeof(T), out Registration registration))
-                return (T)registration.CreateInstanceFrom(this);
+            if (IsAlreadyRegister<T>())
+                throw new InvalidOperationException($"{typeof(T)} is already registered");
+
+            Registration registration = new Registration(container => creator.Invoke(container));
+            _container.Add(typeof(T), registration);
+
+            return registration;
+        }
+
+        public bool IsAlreadyRegister<T>()
+        {
+            if (_container.ContainsKey(typeof(T)))
+                return true;
 
             if (_parent != null)
-                return _parent.Resolve<T>();
-        }
-        finally
-        {
-            _requests.Remove(typeof(T));
+                return _parent.IsAlreadyRegister<T>();
+
+            return false;
         }
 
-        throw new InvalidOperationException($"Registration for {typeof(T)} not exist");
-    }
-
-    public void Initialize()
-    {
-        foreach (Registration registration in _container.Values)
+        public T Resolve<T>()
         {
-            if (registration.IsNonLazy)
-                registration.CreateInstanceFrom(this);
+            if (_requests.Contains(typeof(T)))
+                throw new InvalidOperationException($"Cycle resolve for {typeof(T)}");
+
+            _requests.Add(typeof(T));
+
+            try
+            {
+                if (_container.TryGetValue(typeof(T), out Registration registration))
+                    return (T)registration.CreateInstanceFrom(this);
+
+                if (_parent != null)
+                    return _parent.Resolve<T>();
+            }
+            finally
+            {
+                _requests.Remove(typeof(T));
+            }
+
+            throw new InvalidOperationException($"Registration for {typeof(T)} not exist");
+        }
+
+        public void Initialize()
+        {
+            foreach (Registration registration in _container.Values)
+            {
+                if (registration.IsNonLazy)
+                    registration.CreateInstanceFrom(this);
+
+                registration.OnInitialize();
+            }
+        }
+
+        public void Dispose()
+        {
+            foreach (Registration registration in _container.Values)
+                registration.OnDisposable();
         }
     }
 }

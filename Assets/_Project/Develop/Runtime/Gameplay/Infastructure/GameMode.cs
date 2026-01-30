@@ -1,70 +1,74 @@
+using Assets._Project.Develop.Runtime.Gameplay.Utilities;
 using System;
 using UnityEngine;
 
-public class GameMode
+namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
 {
-    public event Action Victory;
-    public event Action Defeat;
-
-    private GenerateRandomStringService _generateRandomStringService;
-    private ReadUserInputService _userInputService;
-    private int _symbolsQuanity;
-
-    private string _userString = String.Empty;
-    private string _randomString = String.Empty;
-
-    private bool _isRunning;
-
-    public bool IsRunning => _isRunning;
-
-    public GameMode(GenerateRandomStringService generateRandomStringService, ReadUserInputService userInputService, int symbolsQuanity)
+    public class GameMode
     {
-        _generateRandomStringService = generateRandomStringService;
-        _userInputService = userInputService;
-        _symbolsQuanity = symbolsQuanity;
-    }
+        public event Action Victory;
+        public event Action Defeat;
 
-    public void Start()
-    {
-        _isRunning = true;
+        private GenerateRandomStringService _generateRandomStringService;
+        private ReadUserInputService _userInputService;
+        private int _symbolsQuanity;
 
-        _randomString = _generateRandomStringService.Generate();
+        private string _userString = string.Empty;
+        private string _randomString = string.Empty;
 
-        Debug.Log(_randomString);
-    }
+        private bool _isRunning;
 
-    public void Update(float deltatime)
-    {
-        if (_isRunning == false)
-            return;
+        public bool IsRunning => _isRunning;
 
-        _userString = _userInputService.Read();
+        public GameMode(GenerateRandomStringService generateRandomStringService, ReadUserInputService userInputService, int symbolsQuanity)
+        {
+            _generateRandomStringService = generateRandomStringService;
+            _userInputService = userInputService;
+            _symbolsQuanity = symbolsQuanity;
+        }
 
-        if (_userString.Length < _symbolsQuanity)
-            return;
+        public void Start()
+        {
+            _isRunning = true;
 
-        Debug.Log("Вы ввели " + _userString);
+            _randomString = _generateRandomStringService.Generate();
 
-        if (_userString == _randomString)
-            ProcessVictory();
-        else
-            ProcessDefeat();
-    }
+            Debug.Log(_randomString);
+        }
 
-    private void ProcessVictory()
-    {
-        ProcessEndGame();
-        Victory?.Invoke();
-    }
+        public void Update(float deltatime)
+        {
+            if (_isRunning == false)
+                return;
 
-    private void ProcessDefeat()
-    {
-        ProcessEndGame();
-        Defeat?.Invoke();
-    }
+            _userString = _userInputService.Read();
 
-    private void ProcessEndGame()
-    {
-        _isRunning = false;
+            if (_userString.Length < _symbolsQuanity)
+                return;
+
+            Debug.Log("Вы ввели " + _userString);
+
+            if (_userString == _randomString)
+                ProcessVictory();
+            else
+                ProcessDefeat();
+        }
+
+        private void ProcessVictory()
+        {
+            ProcessEndGame();
+            Victory?.Invoke();
+        }
+
+        private void ProcessDefeat()
+        {
+            ProcessEndGame();
+            Defeat?.Invoke();
+        }
+
+        private void ProcessEndGame()
+        {
+            _isRunning = false;
+        }
     }
 }

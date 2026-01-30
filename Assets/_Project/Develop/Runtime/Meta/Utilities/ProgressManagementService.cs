@@ -1,53 +1,60 @@
+using Assets._Project.Develop.Runtime.Configs.Meta;
+using Assets._Project.Develop.Runtime.Meta.Features;
+using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
+using Assets._Project.Develop.Runtime.Utilies.ConfigsManagment;
 using UnityEngine;
 
-public class ProgressManagementService
+namespace Assets._Project.Develop.Runtime.Meta.Utilities
 {
-    private readonly ConfigsProviderService _configsProviderService;
-    private readonly WalletService _walletService;
-    private readonly ProgressionService _progressionService;
-
-    public ProgressManagementService(WalletService walletService, ProgressionService progressionService, ConfigsProviderService configsProviderService)
+    public class ProgressManagementService
     {
-        _walletService = walletService;
-        _progressionService = progressionService;
-        _configsProviderService = configsProviderService;
-    }
+        private readonly ConfigsProviderService _configsProviderService;
+        private readonly WalletService _walletService;
+        private readonly ProgressionService _progressionService;
 
-    public void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        public ProgressManagementService(WalletService walletService, ProgressionService progressionService, ConfigsProviderService configsProviderService)
         {
-            GetInfo();
+            _walletService = walletService;
+            _progressionService = progressionService;
+            _configsProviderService = configsProviderService;
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha4))
+        public void Update()
         {
-            ResetProgress();
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                GetInfo();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                ResetProgress();
+            }
         }
-    }
 
-    private void GetInfo()
-    {
-        Debug.Log("Количество выигрышей " + _progressionService.WinningsQuantity);
-        Debug.Log("Количество поражений " + _progressionService.LossesQuantity);
-        Debug.Log("Запас золота " + _walletService.GetCurrency(CurrencyTypes.Gold).Value);
-    }
-
-    private void ResetProgress()
-    {
-        LevelConfig levelConfig = _configsProviderService.GetConfig<LevelConfig>();
-
-        Debug.Log($"Для сброса прогресса требуется {levelConfig.MoneyToResetProgress} золотых");
-
-        if (_walletService.EnoughCurrency(CurrencyTypes.Gold, levelConfig.MoneyToResetProgress))
+        private void GetInfo()
         {
-            _progressionService.Reset();
-            _walletService.SpendCurrency(CurrencyTypes.Gold, levelConfig.MoneyToResetProgress);
-            Debug.Log("Прогресс успешно сброшен");
+            Debug.Log("Количество выигрышей " + _progressionService.WinningsQuantity.Value);
+            Debug.Log("Количество поражений " + _progressionService.LossesQuantity.Value);
+            Debug.Log("Запас золота " + _walletService.GetCurrency(CurrencyTypes.Gold).Value);
         }
-        else
+
+        private void ResetProgress()
         {
-            Debug.Log("У вас недостаточно золота");
+            StandardSettingsConfig standardSettingsConfig = _configsProviderService.GetConfig<StandardSettingsConfig>();
+
+            Debug.Log($"Для сброса прогресса требуется {standardSettingsConfig.MoneyToResetProgress} золотых");
+
+            if (_walletService.EnoughCurrency(CurrencyTypes.Gold, standardSettingsConfig.MoneyToResetProgress))
+            {
+                _progressionService.Reset();
+                _walletService.SpendCurrency(CurrencyTypes.Gold, standardSettingsConfig.MoneyToResetProgress);
+                Debug.Log("Прогресс успешно сброшен");
+            }
+            else
+            {
+                Debug.Log("У вас недостаточно золота");
+            }
         }
     }
 }

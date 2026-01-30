@@ -1,35 +1,34 @@
+using Assets._Project.Develop.Runtime.Infastructure;
+using Assets._Project.Develop.Runtime.Infastructure.DI;
+using Assets._Project.Develop.Runtime.Utilies.ScenesManagment;
 using System.Collections;
 
-public class MainMenuBootstrap : SceneBootstrap
+namespace Assets._Project.Develop.Runtime.Meta.Infastructure
 {
-    private DIContainer _container;
-    private ModeSelectionService _modeSelectionService;
-    private ProgressManagementService _progressManagementService;
-
-    public override void ProcessRegistrations(DIContainer container, IInputSceneArgs sceneArgs = null)
+    public class MainMenuBootstrap : SceneBootstrap
     {
-        _container = container;
+        private DIContainer _container;
 
-        MainMenuContextRegistrations.Process(_container);
-    }
+        public override void ProcessRegistrations(DIContainer container, IInputSceneArgs sceneArgs = null)
+        {
+            _container = container;
 
-    public override IEnumerator Initialize()
-    {
-        yield break;
-    }
+            MainMenuContextRegistrations.Process(_container);
+        }
 
-    public override void Run()
-    {
-        _modeSelectionService = _container.Resolve<ModeSelectionService>();
-        _progressManagementService = _container.Resolve<ProgressManagementService>();
-    }
+        public override IEnumerator Initialize()
+        {
+            yield break;
+        }
 
-    private void Update()
-    {
-        if (_modeSelectionService != null)
-            _modeSelectionService.Update();
+        public override void Run()
+        {
 
-        if (_progressManagementService != null)
-            _progressManagementService.Update();
+        }
+
+        private void Update()
+        {
+
+        }
     }
 }

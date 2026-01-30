@@ -1,14 +1,18 @@
+using Assets._Project.Develop.Runtime.Utilies.ScenesManagment;
 
-public class GameplayInputArgs : IInputSceneArgs
+namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
 {
-    public GameplayInputArgs(string symbolSet, int symbolsQuanity, int moneyBet)
+    public class GameplayInputArgs : IInputSceneArgs
     {
-        SymbolSet = symbolSet;
-        SymbolsQuanity = symbolsQuanity;
-        MoneyBet = moneyBet;
-    }
+        public GameplayInputArgs(string symbolSet, int symbolsQuanity, int moneyBet)
+        {
+            SymbolSet = symbolSet;
+            SymbolsQuanity = symbolsQuanity;
+            MoneyBet = moneyBet;
+        }
 
-    public string SymbolSet { get; }
-    public int SymbolsQuanity { get; }
-    public int MoneyBet { get; }
+        public string SymbolSet { get; }
+        public int SymbolsQuanity { get; }
+        public int MoneyBet { get; }
+    }
 }

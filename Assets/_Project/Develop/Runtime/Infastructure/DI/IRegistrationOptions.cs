@@ -1,5 +1,7 @@
-
-public interface IRegistrationOptions
+namespace Assets._Project.Develop.Runtime.Infastructure.DI
 {
-    void NonLazy();
+    public interface IRegistrationOptions
+    {
+        void NonLazy();
+    }
 }

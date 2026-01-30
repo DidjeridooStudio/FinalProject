@@ -1,5 +1,7 @@
-
-public interface IDataReader<TData> where TData : ISaveData
+namespace Assets._Project.Develop.Runtime.Utilies.DataManagment.DataProviders
 {
-    void ReadFrom(TData data);
+    public interface IDataReader<TData> where TData : ISaveData
+    {
+        void ReadFrom(TData data);
+    }
 }

@@ -1,26 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class StandartLoadingScreen : MonoBehaviour, ILoadingScreen
+namespace Assets._Project.Develop.Runtime.Utilies.LoadingScreen
 {
-    #region Interface
-
-    public bool IsShown => gameObject.activeSelf;
-
-    #endregion
-
-    private void Awake()
+    public class StandartLoadingScreen : MonoBehaviour, ILoadingScreen
     {
-        Hide();
-        DontDestroyOnLoad(this);
+        #region Interface
+
+        public bool IsShown => gameObject.activeSelf;
+
+        #endregion
+
+        private void Awake()
+        {
+            Hide();
+            DontDestroyOnLoad(this);
+        }
+
+        #region Interface
+
+        public void Show() => gameObject.SetActive(true);
+
+        public void Hide() => gameObject.SetActive(false);
+
+        #endregion
     }
-
-    #region Interface
-
-    public void Show() => gameObject.SetActive(true);
-
-    public void Hide() => gameObject.SetActive(false);
-
-    #endregion
 }

@@ -1,6 +1,8 @@
-
-public enum ModeTypes
+namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
 {
-    Letters,
-    Numbers
+    public enum ModeTypes
+    {
+        Letters,
+        Numbers
+    }
 }

@@ -1,5 +1,7 @@
-
-public enum CurrencyTypes
+namespace Assets._Project.Develop.Runtime.Meta.Features.Wallet
 {
-    Gold
+    public enum CurrencyTypes
+    {
+        Gold
+    }
 }

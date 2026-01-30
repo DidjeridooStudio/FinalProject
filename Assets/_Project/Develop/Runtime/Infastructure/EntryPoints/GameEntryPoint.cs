@@ -1,50 +1,59 @@
+using Assets._Project.Develop.Runtime.Infastructure.DI;
+using Assets._Project.Develop.Runtime.Utilies.ConfigsManagment;
+using Assets._Project.Develop.Runtime.Utilies.CoroutinesManagment;
+using Assets._Project.Develop.Runtime.Utilies.DataManagment.DataProviders;
+using Assets._Project.Develop.Runtime.Utilies.LoadingScreen;
+using Assets._Project.Develop.Runtime.Utilies.ScenesManagment;
 using System.Collections;
 using UnityEngine;
 
-public class GameEntryPoint : MonoBehaviour
+namespace Assets._Project.Develop.Runtime.Infastructure.EntryPoints
 {
-    private void Awake()
+    public class GameEntryPoint : MonoBehaviour
     {
-        SetupAppSettings();
+        private void Awake()
+        {
+            SetupAppSettings();
 
-        DIContainer projectContainer = new DIContainer();
+            DIContainer projectContainer = new DIContainer();
 
-        ProjectContextRegistrations.Process(projectContainer);
+            ProjectContextRegistrations.Process(projectContainer);
 
-        projectContainer.Initialize();
+            projectContainer.Initialize();
 
-        projectContainer.Resolve<ICoroutinesPerformer>().StartPerform(Initialize(projectContainer));
-    }
+            projectContainer.Resolve<ICoroutinesPerformer>().StartPerform(Initialize(projectContainer));
+        }
 
-    private void SetupAppSettings()
-    {
-        QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 60;
-    }
+        private void SetupAppSettings()
+        {
+            QualitySettings.vSyncCount = 0;
+            Application.targetFrameRate = 60;
+        }
 
-    private IEnumerator Initialize(DIContainer container)
-    {
-        ILoadingScreen loadingScreen = container.Resolve<ILoadingScreen>();
-        ScenesSwitcherService scenesSwitcherService = container.Resolve<ScenesSwitcherService>();
-        PlayerDataProvider playerDataProvider = container.Resolve<PlayerDataProvider>();
+        private IEnumerator Initialize(DIContainer container)
+        {
+            ILoadingScreen loadingScreen = container.Resolve<ILoadingScreen>();
+            ScenesSwitcherService scenesSwitcherService = container.Resolve<ScenesSwitcherService>();
+            PlayerDataProvider playerDataProvider = container.Resolve<PlayerDataProvider>();
 
-        loadingScreen.Show();
+            loadingScreen.Show();
 
-        yield return container.Resolve<ConfigsProviderService>().LoadAsync();
+            yield return container.Resolve<ConfigsProviderService>().LoadAsync();
 
-        bool isPlayerDataSaveExists = false;
+            bool isPlayerDataSaveExists = false;
 
-        yield return playerDataProvider.Exists(result => isPlayerDataSaveExists = result);
+            yield return playerDataProvider.Exists(result => isPlayerDataSaveExists = result);
 
-        if (isPlayerDataSaveExists)
-            yield return playerDataProvider.Load();
-        else
-            playerDataProvider.Reset();
+            if (isPlayerDataSaveExists)
+                yield return playerDataProvider.Load();
+            else
+                playerDataProvider.Reset();
 
-        yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(1);
 
-        loadingScreen.Hide();
+            loadingScreen.Hide();
 
-        yield return scenesSwitcherService.ProcessSwitchTo(Scenes.MainMenu);
+            yield return scenesSwitcherService.ProcessSwitchTo(Scenes.MainMenu);
+        }
     }
 }

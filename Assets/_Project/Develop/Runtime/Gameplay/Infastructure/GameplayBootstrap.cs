@@ -1,44 +1,50 @@
+using Assets._Project.Develop.Runtime.Infastructure;
+using Assets._Project.Develop.Runtime.Infastructure.DI;
+using Assets._Project.Develop.Runtime.Utilies.ScenesManagment;
 using System;
 using System.Collections;
 using UnityEngine;
 
-public class GameplayBootstrap : SceneBootstrap
+namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
 {
-    private DIContainer _container;
-    private GameplayInputArgs _inputArgs;
-    private GameplayCircle _gameplayCircle;
-
-    public override void ProcessRegistrations(DIContainer container, IInputSceneArgs sceneArgs = null)
+    public class GameplayBootstrap : SceneBootstrap
     {
-        _container = container;
+        private DIContainer _container;
+        private GameplayInputArgs _inputArgs;
+        private GameplayCircleL3 _gameplayCircle;
 
-        if (sceneArgs is not GameplayInputArgs gameplayInputArgs)
-            throw new ArgumentException($"{nameof(sceneArgs)} is not match with {typeof(GameplayInputArgs)} type");
+        public override void ProcessRegistrations(DIContainer container, IInputSceneArgs sceneArgs = null)
+        {
+            _container = container;
 
-        _inputArgs = gameplayInputArgs;
+            if (sceneArgs is not GameplayInputArgs gameplayInputArgs)
+                throw new ArgumentException($"{nameof(sceneArgs)} is not match with {typeof(GameplayInputArgs)} type");
 
-        GameplayContextRegistrations.Process(_container, _inputArgs);
-    }
+            _inputArgs = gameplayInputArgs;
 
-    public override IEnumerator Initialize()
-    {
-        yield break;
-    }
+            GameplayContextRegistrations.Process(_container, _inputArgs);
+        }
 
-    public override void Run()
-    {
-        _gameplayCircle = _container.Resolve<GameplayCircle>();
-        _gameplayCircle.Prepare();
-        _gameplayCircle.Launch();
-    }
+        public override IEnumerator Initialize()
+        {
+            yield break;
+        }
 
-    private void Update()
-    {
-        _gameplayCircle?.Update(Time.deltaTime);
-    }
+        public override void Run()
+        {
+            _gameplayCircle = _container.Resolve<GameplayCircleL3>();
+            _gameplayCircle.Prepare();
+            _gameplayCircle.Launch();
+        }
 
-    private void OnDestroy()
-    {
-        _gameplayCircle?.Dispose();
+        private void Update()
+        {
+            //_gameplayCircle?.Update(Time.deltaTime);
+        }
+
+        private void OnDestroy()
+        {
+            _gameplayCircle?.Dispose();
+        }
     }
 }

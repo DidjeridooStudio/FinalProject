@@ -1,34 +1,39 @@
-using System;
+using Assets._Project.Develop.Runtime.Configs.Meta.Wallet;
+using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
+using Assets._Project.Develop.Runtime.Utilies.ConfigsManagment;
 using System.Collections.Generic;
 
-public class PlayerDataProvider : DataProvider<PlayerData>
+namespace Assets._Project.Develop.Runtime.Utilies.DataManagment.DataProviders
 {
-    private readonly ConfigsProviderService _configProviderService;
-
-    public PlayerDataProvider(ISaveLoadService saveLoadService, ConfigsProviderService configProviderService) : base(saveLoadService)
+    public class PlayerDataProvider : DataProvider<PlayerData>
     {
-        _configProviderService = configProviderService;
-    }
+        private readonly ConfigsProviderService _configProviderService;
 
-    protected override PlayerData GetOriginData()
-    {
-        return new PlayerData()
+        public PlayerDataProvider(ISaveLoadService saveLoadService, ConfigsProviderService configProviderService) : base(saveLoadService)
         {
-            WalletData = InitWalletData(),
-            WinningsQuantity = 0,
-            LossesQuantity = 0,
-        };
-    }
+            _configProviderService = configProviderService;
+        }
 
-    private Dictionary<CurrencyTypes, int> InitWalletData()
-    {
-        Dictionary<CurrencyTypes, int> walletData = new Dictionary<CurrencyTypes, int>();
+        protected override PlayerData GetOriginData()
+        {
+            return new PlayerData()
+            {
+                WalletData = InitWalletData(),
+                WinningsQuantity = 0,
+                LossesQuantity = 0,
+            };
+        }
 
-        StartWalletConfig startWalletConfig = _configProviderService.GetConfig<StartWalletConfig>();
+        private Dictionary<CurrencyTypes, int> InitWalletData()
+        {
+            Dictionary<CurrencyTypes, int> walletData = new Dictionary<CurrencyTypes, int>();
 
-        foreach (CurrencyTypes currencyType in Enum.GetValues(typeof(CurrencyTypes)))
-            walletData.Add(currencyType, startWalletConfig.GetValueFor(currencyType));
+            StartWalletConfig startWalletConfig = _configProviderService.GetConfig<StartWalletConfig>();
 
-        return walletData;
+            foreach (CurrencyTypes currencyType in startWalletConfig.AvailableCurrencies())
+                walletData.Add(currencyType, startWalletConfig.GetValueFor(currencyType));
+
+            return walletData;
+        }
     }
 }

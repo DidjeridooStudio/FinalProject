@@ -1,54 +1,56 @@
 using System;
 using System.Collections;
 using System.IO;
-using UnityEngine;
 
-public class LocalFileDataRepository : IDataRepository
+namespace Assets._Project.Develop.Runtime.Utilies.DataManagment.DataRepository
 {
-    private readonly string _folderPath;
-    private readonly string _saveFileExtension;
-
-    public LocalFileDataRepository(string folderPath, string saveFileExtension)
+    public class LocalFileDataRepository : IDataRepository
     {
-        _folderPath = folderPath;
-        _saveFileExtension = saveFileExtension;
+        private readonly string _folderPath;
+        private readonly string _saveFileExtension;
+
+        public LocalFileDataRepository(string folderPath, string saveFileExtension)
+        {
+            _folderPath = folderPath;
+            _saveFileExtension = saveFileExtension;
+        }
+
+        #region Interface
+
+        public IEnumerator Exists(string key, Action<bool> onExistsResult)
+        {
+            bool exists = File.Exists(FullPathFor(key));
+
+            onExistsResult?.Invoke(exists);
+
+            yield break;
+        }
+
+        public IEnumerator Read(string key, Action<string> onRead)
+        {
+            string serializedData = File.ReadAllText(FullPathFor(key));
+
+            onRead?.Invoke(serializedData);
+
+            yield break;
+        }
+
+        public IEnumerator Write(string key, string serializedData)
+        {
+            File.WriteAllText(FullPathFor(key), serializedData);
+
+            yield break;
+        }
+
+        public IEnumerator Remove(string key)
+        {
+            File.Delete(FullPathFor(key));
+
+            yield break;
+        }
+
+        #endregion
+
+        private string FullPathFor(string key) => Path.Combine(_folderPath, key) + "." + _saveFileExtension;
     }
-
-    #region Interface
-
-    public IEnumerator Exists(string key, Action<bool> onExistsResult)
-    {
-        bool exists = File.Exists(FullPathFor(key));
-
-        onExistsResult?.Invoke(exists);
-
-        yield break;
-    }
-
-    public IEnumerator Read(string key, Action<string> onRead)
-    {
-        string serializedData = File.ReadAllText(FullPathFor(key));
-
-        onRead?.Invoke(serializedData);
-
-        yield break;
-    }
-
-    public IEnumerator Write(string key, string serializedData)
-    {
-        File.WriteAllText(FullPathFor(key), serializedData);
-
-        yield break;
-    }
-
-    public IEnumerator Remove(string key)
-    {
-        File.Delete(FullPathFor(key));
-
-        yield break;
-    }
-
-    #endregion
-
-    private string FullPathFor(string key) => Path.Combine(_folderPath, key) + "." + _saveFileExtension;
 }

@@ -1,7 +1,9 @@
-
-public interface IDataSerializer
+namespace Assets._Project.Develop.Runtime.Utilies.DataManagment.Serializes
 {
-    string Serialize<TData>(TData data);
+    public interface IDataSerializer
+    {
+        string Serialize<TData>(TData data);
 
-    TData Deserialize<TData>(string serializedData);
-}  
+        TData Deserialize<TData>(string serializedData);
+    }
+}

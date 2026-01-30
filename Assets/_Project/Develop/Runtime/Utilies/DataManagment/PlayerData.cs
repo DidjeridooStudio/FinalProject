@@ -1,9 +1,13 @@
+using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
 using System.Collections.Generic;
 
-public class PlayerData : ISaveData
+namespace Assets._Project.Develop.Runtime.Utilies.DataManagment
 {
-    public Dictionary<CurrencyTypes, int> WalletData;
+    public class PlayerData : ISaveData
+    {
+        public Dictionary<CurrencyTypes, int> WalletData;
 
-    public int WinningsQuantity;
-    public int LossesQuantity;
+        public int WinningsQuantity;
+        public int LossesQuantity;
+    }
 }

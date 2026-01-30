@@ -1,16 +1,20 @@
+using Assets._Project.Develop.Runtime.Utilies.DataManagment;
 using System;
 using System.Collections.Generic;
 
-public class MapDataKeyStorage : IDataKeyStorage
+namespace Assets._Project.Develop.Runtime.Utilies.DataManagment.KeyStorage
 {
-    private readonly Dictionary<Type, string> _keys = new Dictionary<Type, string>()
+    public class MapDataKeyStorage : IDataKeyStorage
+    {
+        private readonly Dictionary<Type, string> _keys = new Dictionary<Type, string>()
     {
         {typeof(PlayerData), "PlayerData"},
     };
 
-    #region Interface
+        #region Interface
 
-    public string GetKeyFor<TData>() where TData : ISaveData => _keys[typeof(TData)];
+        public string GetKeyFor<TData>() where TData : ISaveData => _keys[typeof(TData)];
 
-    #endregion
+        #endregion
+    }
 }

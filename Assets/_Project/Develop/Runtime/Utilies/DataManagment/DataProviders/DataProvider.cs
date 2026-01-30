@@ -2,73 +2,76 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public abstract class DataProvider<TData> where TData : ISaveData
+namespace Assets._Project.Develop.Runtime.Utilies.DataManagment.DataProviders
 {
-    private readonly ISaveLoadService _saveLoadService;
-
-    private readonly List<IDataReader<TData>> _dataReaders = new List<IDataReader<TData>>();
-    private readonly List<IDataWriter<TData>> _dataWriters = new List<IDataWriter<TData>>();
-
-    private TData _data;
-
-    protected DataProvider(ISaveLoadService saveLoadService)
+    public abstract class DataProvider<TData> where TData : ISaveData
     {
-        _saveLoadService = saveLoadService;
-    }
+        private readonly ISaveLoadService _saveLoadService;
 
-    public void RegisterDataReader(IDataReader<TData> dataReader)
-    {
-        if (_dataReaders.Contains(dataReader))
-            throw new ArgumentException(nameof(dataReader));
+        private readonly List<IDataReader<TData>> _dataReaders = new List<IDataReader<TData>>();
+        private readonly List<IDataWriter<TData>> _dataWriters = new List<IDataWriter<TData>>();
 
-        _dataReaders.Add(dataReader);
-    }
+        private TData _data;
 
-    public void RegisterDataWriters(IDataWriter<TData> dataWriters)
-    {
-        if (_dataWriters.Contains(dataWriters))
-            throw new ArgumentException(nameof(dataWriters));
+        protected DataProvider(ISaveLoadService saveLoadService)
+        {
+            _saveLoadService = saveLoadService;
+        }
 
-        _dataWriters.Add(dataWriters);
-    }
+        public void RegisterDataReader(IDataReader<TData> dataReader)
+        {
+            if (_dataReaders.Contains(dataReader))
+                throw new ArgumentException(nameof(dataReader));
 
-    public IEnumerator Load()
-    {
-        yield return _saveLoadService.Load<TData>(loadedData => _data = loadedData);
+            _dataReaders.Add(dataReader);
+        }
 
-        SendDataToReaders();
-    }
+        public void RegisterDataWriters(IDataWriter<TData> dataWriters)
+        {
+            if (_dataWriters.Contains(dataWriters))
+                throw new ArgumentException(nameof(dataWriters));
 
-    public IEnumerator Save()
-    {
-        UpdateDataFromWriters();
+            _dataWriters.Add(dataWriters);
+        }
 
-        yield return _saveLoadService.Save(_data);
-    }
+        public IEnumerator Load()
+        {
+            yield return _saveLoadService.Load<TData>(loadedData => _data = loadedData);
 
-    public IEnumerator Exists(Action<bool> onExistsResult)
-    {
-        yield return _saveLoadService.Exists<TData>(result => onExistsResult?.Invoke(result));
-    }
+            SendDataToReaders();
+        }
 
-    public void Reset()
-    {
-        _data = GetOriginData();
+        public IEnumerator Save()
+        {
+            UpdateDataFromWriters();
 
-        SendDataToReaders();
-    }
+            yield return _saveLoadService.Save(_data);
+        }
 
-    protected abstract TData GetOriginData();
+        public IEnumerator Exists(Action<bool> onExistsResult)
+        {
+            yield return _saveLoadService.Exists<TData>(result => onExistsResult?.Invoke(result));
+        }
 
-    private void SendDataToReaders()
-    {
-        foreach (IDataReader<TData> dataReader in _dataReaders)
-            dataReader.ReadFrom(_data);
-    }
+        public void Reset()
+        {
+            _data = GetOriginData();
 
-    private void UpdateDataFromWriters()
-    {
-        foreach (IDataWriter<TData> dataWriters in _dataWriters)
-            dataWriters.WriteTo(_data);
+            SendDataToReaders();
+        }
+
+        protected abstract TData GetOriginData();
+
+        private void SendDataToReaders()
+        {
+            foreach (IDataReader<TData> dataReader in _dataReaders)
+                dataReader.ReadFrom(_data);
+        }
+
+        private void UpdateDataFromWriters()
+        {
+            foreach (IDataWriter<TData> dataWriters in _dataWriters)
+                dataWriters.WriteTo(_data);
+        }
     }
 }

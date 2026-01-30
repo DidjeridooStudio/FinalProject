@@ -1,8 +1,11 @@
 using Newtonsoft.Json;
 
-public class JsonSerializer : IDataSerializer
+namespace Assets._Project.Develop.Runtime.Utilies.DataManagment.Serializes
 {
-    public string Serialize<TData>(TData data) => JsonConvert.SerializeObject(data);
+    public class JsonSerializer : IDataSerializer
+    {
+        public string Serialize<TData>(TData data) => JsonConvert.SerializeObject(data);
 
-    public TData Deserialize<TData>(string serializedData) => JsonConvert.DeserializeObject<TData>(serializedData);
+        public TData Deserialize<TData>(string serializedData) => JsonConvert.DeserializeObject<TData>(serializedData);
+    }
 }

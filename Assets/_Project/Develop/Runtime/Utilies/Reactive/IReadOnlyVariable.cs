@@ -1,8 +1,11 @@
 using System;
 
-public interface IReadOnlyVariable<T>
+namespace Assets._Project.Develop.Runtime.Utilies.Reactive
 {
-    T Value { get; }
+    public interface IReadOnlyVariable<T>
+    {
+        T Value { get; }
 
-    IDisposable Subcribe(Action<T, T> action);
+        IDisposable Subcribe(Action<T, T> action);
+    }
 }
