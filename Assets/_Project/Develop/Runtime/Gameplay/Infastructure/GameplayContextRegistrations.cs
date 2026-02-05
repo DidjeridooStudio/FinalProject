@@ -1,3 +1,5 @@
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Mono;
 using Assets._Project.Develop.Runtime.Gameplay.Utilities;
 using Assets._Project.Develop.Runtime.Infastructure.DI;
 using Assets._Project.Develop.Runtime.Meta.Features;
@@ -17,15 +19,33 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
     {
         public static void Process(DIContainer container, GameplayInputArgs args)
         {
-            container.RegisterAsSingle(CreateGameplayPopupService);
-            container.RegisterAsSingle(CreateGameplayScreenPresenter).NonLazy();
-            container.RegisterAsSingle(CreateGameplayPresentersFactory);
-            container.RegisterAsSingle(CreateGameplayUIRoot).NonLazy();
-            container.RegisterAsSingle(container => CreateGameplayCircleL3(container, args));
-            container.RegisterAsSingle(container => CreateGameplayCircle(container, args));
-            container.RegisterAsSingle(CreateReadUserInputService);
-            container.RegisterAsSingle(container => CreateGenerateRandomStringService(container, args));
+            container.RegisterAsSingle(CreateMonoEntitiesFactory).NonLazy();
+            container.RegisterAsSingle(CreateEntitiesLifeContext);
+            container.RegisterAsSingle(CreateEntitiesFactory);
+
+
+
+
+            //container.RegisterAsSingle(CreateGameplayPopupService);
+            //container.RegisterAsSingle(CreateGameplayScreenPresenter).NonLazy();
+            //container.RegisterAsSingle(CreateGameplayPresentersFactory);
+            //container.RegisterAsSingle(CreateGameplayUIRoot).NonLazy();
+            //container.RegisterAsSingle(container => CreateGameplayCircleL3(container, args));
+            //container.RegisterAsSingle(container => CreateGameplayCircle(container, args));
+            //container.RegisterAsSingle(CreateReadUserInputService);
+            //container.RegisterAsSingle(container => CreateGenerateRandomStringService(container, args));
         }
+
+        private static MonoEntitiesFactory CreateMonoEntitiesFactory(DIContainer container)
+        {
+            return new MonoEntitiesFactory(
+                container.Resolve<ResourcesAssetsLoader>(),
+                container.Resolve<EntitiesLifeContext>());
+        }
+
+        private static EntitiesLifeContext CreateEntitiesLifeContext(DIContainer container) => new EntitiesLifeContext();
+
+        private static EntitiesFactory CreateEntitiesFactory(DIContainer container) => new EntitiesFactory(container);
 
         private static GameplayPopupService CreateGameplayPopupService(DIContainer container)
         {

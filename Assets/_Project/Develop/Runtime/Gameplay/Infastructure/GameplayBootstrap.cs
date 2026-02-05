@@ -1,3 +1,4 @@
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Infastructure;
 using Assets._Project.Develop.Runtime.Infastructure.DI;
 using Assets._Project.Develop.Runtime.Utilies.ScenesManagment;
@@ -11,7 +12,10 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
     {
         private DIContainer _container;
         private GameplayInputArgs _inputArgs;
-        private GameplayCircleL3 _gameplayCircle;
+        //private GameplayCircleL3 _gameplayCircle;
+
+        [SerializeField] private TestGameplay _testGameplay;
+        private EntitiesLifeContext _entitiesLifeContext;
 
         public override void ProcessRegistrations(DIContainer container, IInputSceneArgs sceneArgs = null)
         {
@@ -27,24 +31,32 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
 
         public override IEnumerator Initialize()
         {
+            _entitiesLifeContext = _container.Resolve<EntitiesLifeContext>();
+
+            _testGameplay.Initialize(_container);
+
             yield break;
         }
 
         public override void Run()
         {
-            _gameplayCircle = _container.Resolve<GameplayCircleL3>();
-            _gameplayCircle.Prepare();
-            _gameplayCircle.Launch();
+            _testGameplay.Run();
+
+            //_gameplayCircle = _container.Resolve<GameplayCircleL3>();
+            //_gameplayCircle.Prepare();
+            //_gameplayCircle.Launch();
         }
 
         private void Update()
         {
+            _entitiesLifeContext?.Update(Time.deltaTime);
+
             //_gameplayCircle?.Update(Time.deltaTime);
         }
 
         private void OnDestroy()
         {
-            _gameplayCircle?.Dispose();
+            //_gameplayCircle?.Dispose();
         }
     }
 }

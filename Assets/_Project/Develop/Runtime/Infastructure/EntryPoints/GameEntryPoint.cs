@@ -1,3 +1,4 @@
+using Assets._Project.Develop.Runtime.Gameplay.Infastructure;
 using Assets._Project.Develop.Runtime.Infastructure.DI;
 using Assets._Project.Develop.Runtime.Utilies.ConfigsManagment;
 using Assets._Project.Develop.Runtime.Utilies.CoroutinesManagment;
@@ -53,7 +54,8 @@ namespace Assets._Project.Develop.Runtime.Infastructure.EntryPoints
 
             loadingScreen.Hide();
 
-            yield return scenesSwitcherService.ProcessSwitchTo(Scenes.MainMenu);
+            //yield return scenesSwitcherService.ProcessSwitchTo(Scenes.MainMenu);
+            yield return scenesSwitcherService.ProcessSwitchTo(Scenes.Gameplay, new GameplayInputArgs("", 1, 1));
         }
     }
 }
