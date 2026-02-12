@@ -1,0 +1,42 @@
+﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
+using Assets._Project.Develop.Runtime.Utilies;
+using Assets._Project.Develop.Runtime.Utilies.Reactive;
+using UnityEngine;
+
+namespace Assets._Project.Develop.Runtime.Gameplay.Features.Sensors
+{
+    public class DeathMaskTouchDetectorSystem : IInitializableSystem, IUpdatableSystem
+    {
+        private Buffer<Collider> _contacts;
+        private ReactiveVariable<bool> _isTouchDeathMask;
+        private LayerMask _deathMask;
+
+        #region Interface
+
+        public void OnInit(Entity entity)
+        {
+            _contacts = entity.ContactsColliderBuffer;
+            _isTouchDeathMask = entity.IsTouchDeathMask;
+            _deathMask = entity.DeathMask;
+        }
+
+        public void OnUpdate(float deltaTime)
+        {
+            for (int i = 0; i < _contacts.Count; i++)
+            {
+                if (MatchWithDeathLayer(_contacts.Items[i]))
+                {
+                    _isTouchDeathMask.Value = true;
+                    return;
+                }
+            }
+
+            _isTouchDeathMask.Value = false;
+        }
+
+        #endregion
+
+        private bool MatchWithDeathLayer(Collider collider) => ((1 << collider.gameObject.layer) & _deathMask) != 0;
+    }
+}

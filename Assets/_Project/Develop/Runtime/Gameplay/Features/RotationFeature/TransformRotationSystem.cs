@@ -1,5 +1,6 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
+using Assets._Project.Develop.Runtime.Utilies.Conditions;
 using Assets._Project.Develop.Runtime.Utilies.Reactive;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.RotationFeature
         private ReactiveVariable<Vector3> _moveDirection;
         private ReactiveVariable<float> _rotateSpeed;
         private Transform _transform;
+        private ICompositeCondition _canRotate;
 
         #region Interface
 
@@ -20,11 +22,14 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.RotationFeature
             _moveDirection = entity.MoveDirection;
             _rotateSpeed = entity.RotateSpeed;
             _transform = entity.Transform;
-
+            _canRotate = entity.CanRotate;
         }
 
         public void OnUpdate(float deltaTime)
         {
+            if (_canRotate.Evaluate() == false)
+                return;
+
             if (_moveDirection.Value.magnitude < DeadZone)
                 return;
 

@@ -19,6 +19,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
     {
         public static void Process(DIContainer container, GameplayInputArgs args)
         {
+            container.RegisterAsSingle(CreateCollidersRegistryService);
             container.RegisterAsSingle(CreateMonoEntitiesFactory).NonLazy();
             container.RegisterAsSingle(CreateEntitiesLifeContext);
             container.RegisterAsSingle(CreateEntitiesFactory);
@@ -36,11 +37,14 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
             //container.RegisterAsSingle(container => CreateGenerateRandomStringService(container, args));
         }
 
+        private static CollidersRegistryService CreateCollidersRegistryService(DIContainer container) => new CollidersRegistryService();
+
         private static MonoEntitiesFactory CreateMonoEntitiesFactory(DIContainer container)
         {
             return new MonoEntitiesFactory(
                 container.Resolve<ResourcesAssetsLoader>(),
-                container.Resolve<EntitiesLifeContext>());
+                container.Resolve<EntitiesLifeContext>(),
+                container.Resolve<CollidersRegistryService>());
         }
 
         private static EntitiesLifeContext CreateEntitiesLifeContext(DIContainer container) => new EntitiesLifeContext();

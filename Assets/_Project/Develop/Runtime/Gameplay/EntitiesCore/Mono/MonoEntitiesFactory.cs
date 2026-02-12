@@ -11,13 +11,15 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Mono
     {
         private readonly ResourcesAssetsLoader _resourcesAssetsLoader;
         private readonly EntitiesLifeContext _entitiesLifeContext;
+        private readonly CollidersRegistryService _collidersRegistryService;
 
         private readonly Dictionary<Entity, MonoEntity> _entityToMono = new Dictionary<Entity, MonoEntity>();
 
-        public MonoEntitiesFactory(ResourcesAssetsLoader resourcesAssetsLoader, EntitiesLifeContext entitiesLifeContext)
+        public MonoEntitiesFactory(ResourcesAssetsLoader resourcesAssetsLoader, EntitiesLifeContext entitiesLifeContext, CollidersRegistryService collidersRegistryService)
         {
             _resourcesAssetsLoader = resourcesAssetsLoader;
             _entitiesLifeContext = entitiesLifeContext;
+            _collidersRegistryService = collidersRegistryService;
         }
 
         public MonoEntity Create(Entity entity, Vector3 position, string path)
@@ -26,7 +28,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Mono
 
             MonoEntity instance = Object.Instantiate(prefab, position, Quaternion.identity);
 
-            instance.Setup(entity);
+            instance.Initialize(_collidersRegistryService);
+
+            instance.Link(entity);
 
             _entityToMono.Add(entity, instance);
 
