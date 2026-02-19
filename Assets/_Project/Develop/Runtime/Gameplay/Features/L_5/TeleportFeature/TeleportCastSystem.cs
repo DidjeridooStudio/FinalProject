@@ -3,14 +3,12 @@ using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
 using Assets._Project.Develop.Runtime.Utilies.Reactive;
 using System;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.Features.L_5.TeleportFeature
 {
     public class TeleportCastSystem : IInitializableSystem
     {
-        private ReactiveVariable<float> _teleportationRadius;
-        private ReactiveEvent<float> _teleportCastRequest;
+        private ReactiveEvent<float, Vector3> _teleportCastRequest;
         private ReactiveEvent _teleportCastEvent;
         private ReactiveVariable<float> _currentEnergy;
         private ReactiveVariable<bool> _inEnergyRefill;
@@ -22,7 +20,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.L_5.TeleportFeature
 
         public void OnInit(Entity entity)
         {
-            _teleportationRadius = entity.TeleportationRadius;
             _teleportCastRequest = entity.TeleportCastRequest;
             _teleportCastEvent = entity.TeleportCastEvent;
             _currentEnergy = entity.CurrentEnergy;
@@ -39,14 +36,14 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.L_5.TeleportFeature
 
         #endregion
 
-        private void OnTeleportCastRequest(float energy)
+        private void OnTeleportCastRequest(float energy, Vector3 position)
         {
             if (_currentEnergy.Value >= energy)
             {
                 _currentEnergy.Value -= energy;
                 _inEnergyRefill.Value = true;
 
-                TeleportEntity();
+                TeleportEntity(position);
 
                 _teleportCastEvent.Invoke();
             }
@@ -56,10 +53,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.L_5.TeleportFeature
             }
         }
 
-        private void TeleportEntity()
+        private void TeleportEntity(Vector3 position)
         {
-            Vector2 randomVector2 = Random.insideUnitCircle * _teleportationRadius.Value;
-            _transform.position = _transform.position + new Vector3(randomVector2.x, 0, randomVector2.y);
+            _transform.position = _transform.position + position;
         }
     }
 }

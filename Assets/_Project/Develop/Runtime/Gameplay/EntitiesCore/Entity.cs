@@ -1,10 +1,6 @@
-﻿using Assets._Project.Develop.Runtime.Gameplay.Common;
-using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
-using Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature;
-using Assets._Project.Develop.Runtime.Utilies.Reactive;
+﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
 {
@@ -18,6 +14,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
         private readonly List<IDisposableSystem> _disposableSystems = new List<IDisposableSystem>();
 
         private bool _isInit;
+
+        public bool IsInit => _isInit;
 
         public void Initialize()
         {

@@ -1,4 +1,5 @@
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
 using Assets._Project.Develop.Runtime.Infastructure;
 using Assets._Project.Develop.Runtime.Infastructure.DI;
 using Assets._Project.Develop.Runtime.Utilies.ScenesManagment;
@@ -16,6 +17,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
 
         [SerializeField] private TestGameplay _testGameplay;
         private EntitiesLifeContext _entitiesLifeContext;
+        private AIBrainsContext _brainsContext;
 
         public override void ProcessRegistrations(DIContainer container, IInputSceneArgs sceneArgs = null)
         {
@@ -32,6 +34,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
         public override IEnumerator Initialize()
         {
             _entitiesLifeContext = _container.Resolve<EntitiesLifeContext>();
+            _brainsContext = _container.Resolve<AIBrainsContext>();
 
             _testGameplay.Initialize(_container);
 
@@ -49,6 +52,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
 
         private void Update()
         {
+            _brainsContext?.Update(Time.deltaTime);
             _entitiesLifeContext?.Update(Time.deltaTime);
 
             //_gameplayCircle?.Update(Time.deltaTime);

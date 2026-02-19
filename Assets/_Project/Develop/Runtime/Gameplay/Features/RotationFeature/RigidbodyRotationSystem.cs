@@ -10,7 +10,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.RotationFeature
     {
         private const float DeadZone = 0.05f;
 
-        private ReactiveVariable<Vector3> _moveDirection;
+        private ReactiveVariable<Vector3> _rotateDirection;
         private ReactiveVariable<float> _rotateSpeed;
         private Rigidbody _rigidbody;
         private ICompositeCondition _canRotate;
@@ -19,13 +19,13 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.RotationFeature
 
         public void OnInit(Entity entity)
         {
-            _moveDirection = entity.MoveDirection;
+            _rotateDirection = entity.RotateDirection;
             _rotateSpeed = entity.RotateSpeed;
             _rigidbody = entity.Rigidbody;
             _canRotate = entity.CanRotate;
 
-            if (_moveDirection.Value != Vector3.zero)
-                _rigidbody.transform.rotation = Quaternion.LookRotation(_moveDirection.Value.normalized);
+            if (_rotateDirection.Value != Vector3.zero)
+                _rigidbody.transform.rotation = Quaternion.LookRotation(_rotateDirection.Value.normalized);
         }
 
         public void OnUpdate(float deltaTime)
@@ -33,10 +33,10 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.RotationFeature
             if (_canRotate.Evaluate() == false)
                 return;
 
-            if (_moveDirection.Value.magnitude < DeadZone)
+            if (_rotateDirection.Value.magnitude < DeadZone)
                 return;
 
-            Quaternion lookRotation = Quaternion.LookRotation(_moveDirection.Value.normalized);
+            Quaternion lookRotation = Quaternion.LookRotation(_rotateDirection.Value.normalized);
 
             float step = _rotateSpeed.Value * deltaTime;
 

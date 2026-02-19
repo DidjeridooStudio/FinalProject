@@ -98,6 +98,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddMoveDirection()
                 .AddMoveSpeed(new ReactiveVariable<float>(10))
                 .AddIsMoving()
+                .AddRotateDirection()
                 .AddRotateSpeed(new ReactiveVariable<float>(900))
                 .AddMaxHealth(new ReactiveVariable<float>(100))
                 .AddCurrentHealth(new ReactiveVariable<float>(100))
@@ -118,7 +119,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddInstantAttackDamage(new ReactiveVariable<float>(50))
                 .AddAttackCanceledEvent()
                 .AddInAttackCooldown()
-                .AddAttackCooldownInitialTime(new ReactiveVariable<float>(2))
+                .AddAttackCooldownInitialTime(new ReactiveVariable<float>(1))
                 .AddAttackCooldownCurrentTime();
 
             ICompositeCondition canMove = new CompositeCondition()
@@ -186,6 +187,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddMoveDirection(new ReactiveVariable<Vector3>(direction))
                 .AddMoveSpeed(new ReactiveVariable<float>(10))
                 .AddIsMoving()
+                .AddRotateDirection()
                 .AddRotateSpeed(new ReactiveVariable<float>(9999))
                 .AddIsDead()
                 .AddContactsDetectingMask(1 << LayerMask.NameToLayer("Characters"))
@@ -238,9 +240,10 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddMoveDirection()
                 .AddMoveSpeed(new ReactiveVariable<float>(10))
                 .AddIsMoving()
+                .AddRotateDirection()
                 .AddRotateSpeed(new ReactiveVariable<float>(900))
                 .AddMaxHealth(new ReactiveVariable<float>(100))
-                .AddCurrentHealth(new ReactiveVariable<float>(100))
+                .AddCurrentHealth(new ReactiveVariable<float>(Random.Range(0, 101)))
                 .AddIsDead()
                 .AddInDeadProcess()
                 .AddDeathProcessInitialTime(new ReactiveVariable<float>(2))
@@ -300,6 +303,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             entity
                 .AddMoveDirection()
                 .AddMoveSpeed(new ReactiveVariable<float>(10))
+                .AddRotateDirection()
                 .AddRotateSpeed(new ReactiveVariable<float>(900));
 
             entity.AddSystem(new RigidbodyMovementSystem());
@@ -319,6 +323,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             entity
                 .AddMoveDirection()
                 .AddMoveSpeed(new ReactiveVariable<float>(10))
+                .AddRotateDirection()
                 .AddRotateSpeed(new ReactiveVariable<float>(900));
 
             entity.AddSystem(new CharacterControllerMovementSystem());

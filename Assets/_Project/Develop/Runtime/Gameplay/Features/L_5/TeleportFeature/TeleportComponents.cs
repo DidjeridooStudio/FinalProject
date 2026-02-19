@@ -1,5 +1,6 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Utilies.Reactive;
+using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.Features.L_5.TeleportFeature
 {
@@ -20,7 +21,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.L_5.TeleportFeature
 
     public class TeleportCastRequest : IEntityComponent
     {
-        public ReactiveEvent<float> Value;
+        public ReactiveEvent<float, Vector3> Value;
     }
 
     public class TeleportCastEvent : IEntityComponent

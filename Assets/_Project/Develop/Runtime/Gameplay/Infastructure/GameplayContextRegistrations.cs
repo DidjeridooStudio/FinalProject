@@ -1,5 +1,7 @@
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Mono;
+using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
+using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
 using Assets._Project.Develop.Runtime.Gameplay.Utilities;
 using Assets._Project.Develop.Runtime.Infastructure.DI;
 using Assets._Project.Develop.Runtime.Meta.Features;
@@ -19,6 +21,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
     {
         public static void Process(DIContainer container, GameplayInputArgs args)
         {
+            container.RegisterAsSingle<IInputService>(CreateDesktopInput);
+            container.RegisterAsSingle(CreateAIBrainsContext);
+            container.RegisterAsSingle(CreateBrainsFactory);
             container.RegisterAsSingle(CreateCollidersRegistryService);
             container.RegisterAsSingle(CreateMonoEntitiesFactory).NonLazy();
             container.RegisterAsSingle(CreateEntitiesLifeContext);
@@ -36,6 +41,12 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
             //container.RegisterAsSingle(CreateReadUserInputService);
             //container.RegisterAsSingle(container => CreateGenerateRandomStringService(container, args));
         }
+
+        private static DesktopInput CreateDesktopInput(DIContainer container) => new DesktopInput();
+
+        private static AIBrainsContext CreateAIBrainsContext(DIContainer container) => new AIBrainsContext();
+
+        private static BrainsFactory CreateBrainsFactory(DIContainer container) => new BrainsFactory(container);
 
         private static CollidersRegistryService CreateCollidersRegistryService(DIContainer container) => new CollidersRegistryService();
 

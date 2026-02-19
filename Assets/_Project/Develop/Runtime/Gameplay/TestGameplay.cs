@@ -1,4 +1,5 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
 using Assets._Project.Develop.Runtime.Infastructure.DI;
 using UnityEngine;
 
@@ -8,8 +9,10 @@ namespace Assets._Project.Develop.Runtime.Gameplay
     {
         private DIContainer _container;
         private EntitiesFactory _entitiesFactory;
+        private BrainsFactory _brainsFactory;
 
         private Entity _entity;
+        private Entity _ghost;
 
         private bool _isRunning;
 
@@ -17,21 +20,32 @@ namespace Assets._Project.Develop.Runtime.Gameplay
         {
             _container = container;
             _entitiesFactory = _container.Resolve<EntitiesFactory>();
+            _brainsFactory = _container.Resolve<BrainsFactory>();
         }
 
         public void Run()
         {
-            _entity = _entitiesFactory.CreateTeleportingEntity(Vector3.zero);
-            _entitiesFactory.CreateGhostEntity(Vector3.zero + Vector3.forward * 5);
-            _entitiesFactory.CreateGhostEntity(Vector3.zero + Vector3.back * 5);
-            _entitiesFactory.CreateGhostEntity(Vector3.zero + Vector3.left * 5);
-            _entitiesFactory.CreateGhostEntity(Vector3.zero + Vector3.right * 5);
+            // L_6 1a
+            //_entity = _entitiesFactory.CreateTeleportingEntity(Vector3.zero);
+            //_brainsFactory.CreateRandomTeleportingEntityBrain(_entity);
 
-            //_entitiesFactory.CreateTeleportingEntity(Vector3.zero);
-            //_entity = _entitiesFactory.CreateGhostEntity(Vector3.zero + Vector3.forward * 5);
+            // L_6 1b
+            //_entity = _entitiesFactory.CreateTeleportingEntity(Vector3.zero);
+            //_entity.AddCurrentTarget();
+            //_brainsFactory.CreateLessHealthTargetTeleportingEntityBrain(_entity, new LessHealthTargetSelector(_entity));
 
-            //_entity = _entitiesFactory.CreateRigidbodyEntity(Vector3.zero);
-            //_entity = _entitiesFactory.CreateCharacterControllerEntity(new Vector3(1,1,1));
+            // L_6 2
+            Entity ghost1 = _entitiesFactory.CreateGhostEntity(Vector3.zero + Vector3.back * 5);
+            _brainsFactory.CreateGhostBrain(ghost1);
+            Entity ghost2 =  _entitiesFactory.CreateGhostEntity(Vector3.zero + Vector3.left * 5);
+            _brainsFactory.CreateGhostBrain(ghost2);
+            Entity ghost3 =  _entitiesFactory.CreateGhostEntity(Vector3.zero + Vector3.right * 5);
+            _brainsFactory.CreateGhostBrain(ghost3);
+            Entity ghost4 = _entitiesFactory.CreateGhostEntity(Vector3.zero + Vector3.forward * 5);
+            _brainsFactory.CreateGhostBrain(ghost4);
+
+            _entity = _entitiesFactory.CreateHeroEntity(Vector3.zero);
+            _brainsFactory.CreateMainHeroBrainL_6(_entity);
 
             _isRunning = true;
         }
@@ -51,8 +65,11 @@ namespace Assets._Project.Develop.Runtime.Gameplay
             //if (Input.GetKeyDown(KeyCode.R))
             //    _entity.StartAttackRequest.Invoke();
 
-            if (Input.GetKeyDown(KeyCode.T))
-                _entity.TeleportCastRequest.Invoke(5);
+            //if (Input.GetKeyDown(KeyCode.T))
+            //    _entity.TeleportCastRequest.Invoke(5);
+
+            //if (Input.GetKeyDown(KeyCode.B))
+            //    _brainsFactory.CreateGhostBrain(_ghost);
         }
     }
 }

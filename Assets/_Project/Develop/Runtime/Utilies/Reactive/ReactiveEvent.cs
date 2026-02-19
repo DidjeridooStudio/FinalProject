@@ -76,4 +76,41 @@ namespace Assets._Project.Develop.Runtime.Utilies.Reactive
 
         private void Remove(Subcriber<T> subcriber) => _toRemove.Add(subcriber);
     }
+
+    public class ReactiveEvent<T, K> : IReadOnlyEvent<T, K>
+    {
+        private readonly List<Subcriber<T, K>> _subcribers = new List<Subcriber<T, K>>();
+        private readonly List<Subcriber<T, K>> _toAdd = new List<Subcriber<T, K>>();
+        private readonly List<Subcriber<T, K>> _toRemove = new List<Subcriber<T, K>>();
+
+        public IDisposable Subcribe(Action<T, K> action)
+        {
+            Subcriber<T, K> subcriber = new Subcriber<T, K>(action, Remove);
+            _toAdd.Add(subcriber);
+
+            return subcriber;
+        }
+
+        public void Invoke(T arg1, K arg2)
+        {
+            if (_toAdd.Count > 0)
+            {
+                _subcribers.AddRange(_toAdd);
+                _toAdd.Clear();
+            }
+
+            if (_toRemove.Count > 0)
+            {
+                foreach (Subcriber<T, K> subcriber in _toRemove)
+                    _subcribers.Remove(subcriber);
+
+                _toRemove.Clear();
+            }
+
+            foreach (Subcriber<T, K> subcriber in _subcribers)
+                subcriber.Invoke(arg1, arg2);
+        }
+
+        private void Remove(Subcriber<T, K> subcriber) => _toRemove.Add(subcriber);
+    }
 }

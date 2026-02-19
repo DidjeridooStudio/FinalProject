@@ -14,6 +14,7 @@ using Assets._Project.Develop.Runtime.Utilies.DataManagment.Serializes;
 using Assets._Project.Develop.Runtime.Utilies.LoadingScreen;
 using Assets._Project.Develop.Runtime.Utilies.Reactive;
 using Assets._Project.Develop.Runtime.Utilies.ScenesManagment;
+using Assets._Project.Develop.Runtime.Utilies.Timer;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,6 +26,7 @@ namespace Assets._Project.Develop.Runtime.Infastructure.EntryPoints
     {
         public static void Process(DIContainer container)
         {
+            container.RegisterAsSingle(CreateTimerServiceFactory);
             container.RegisterAsSingle(CreateViewsFactory);
             container.RegisterAsSingle(CreateProjectPresentersFactory);
             container.RegisterAsSingle(CreatePlayerDataProvider);
@@ -38,6 +40,8 @@ namespace Assets._Project.Develop.Runtime.Infastructure.EntryPoints
             container.RegisterAsSingle(CreateResourcesAssetsLoader);
             container.RegisterAsSingle<ICoroutinesPerformer>(CreateCoroutinesPerformer);
         }
+
+        private static TimerServiceFactory CreateTimerServiceFactory(DIContainer container) => new TimerServiceFactory(container);
 
         private static ViewsFactory CreateViewsFactory(DIContainer container) => new ViewsFactory(container.Resolve<ResourcesAssetsLoader>());
 
