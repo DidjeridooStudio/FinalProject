@@ -70,13 +70,13 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
                 if (_hasVictory)
                     SwitchScene(Scenes.MainMenu);
                 else
-                    SwitchScene(Scenes.Gameplay, new GameplayInputArgs(_inputArgs.SymbolSet, _inputArgs.SymbolsQuanity, _inputArgs.MoneyBet));
+                    SwitchScene(Scenes.Gameplay, new GameplayInputArgs(_inputArgs.SymbolSet, _inputArgs.SymbolsQuanity, _inputArgs.MoneyBet, null));
             }
         }
 
         private void OnGameModeEnded()
         {
-            _coroutinesPerformer?.StartPerform(_playerDataProvider.Save());
+            _coroutinesPerformer?.StartPerform(_playerDataProvider.SaveAsync());
 
             if (_gameMode != null)
             {

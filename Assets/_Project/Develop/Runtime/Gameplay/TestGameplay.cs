@@ -1,5 +1,8 @@
-﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+﻿using Assets._Project.Develop.Runtime.Configs.Gameplay;
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
+using Assets._Project.Develop.Runtime.Gameplay.Features.Enemies;
+using Assets._Project.Develop.Runtime.Gameplay.Features.MainHero;
 using Assets._Project.Develop.Runtime.Infastructure.DI;
 using UnityEngine;
 
@@ -11,8 +14,14 @@ namespace Assets._Project.Develop.Runtime.Gameplay
         private EntitiesFactory _entitiesFactory;
         private BrainsFactory _brainsFactory;
 
+        [SerializeField] GhostConfig _ghostConfig;
+        [SerializeField] HeroConfig _heroConfig;
+
         private Entity _entity;
         private Entity _ghost;
+
+        private MainHeroFactory _mainHeroFactory;
+        private EnemiesFactory _enemiesFactory;
 
         private bool _isRunning;
 
@@ -21,31 +30,16 @@ namespace Assets._Project.Develop.Runtime.Gameplay
             _container = container;
             _entitiesFactory = _container.Resolve<EntitiesFactory>();
             _brainsFactory = _container.Resolve<BrainsFactory>();
+
+            _mainHeroFactory = _container.Resolve<MainHeroFactory>();
+            _enemiesFactory = _container.Resolve<EnemiesFactory>();
         }
 
         public void Run()
         {
-            // L_6 1a
-            //_entity = _entitiesFactory.CreateTeleportingEntity(Vector3.zero);
-            //_brainsFactory.CreateRandomTeleportingEntityBrain(_entity);
+            Entity ghost1 = _enemiesFactory.Create(Vector3.zero + Vector3.back * 5, _ghostConfig);
 
-            // L_6 1b
-            //_entity = _entitiesFactory.CreateTeleportingEntity(Vector3.zero);
-            //_entity.AddCurrentTarget();
-            //_brainsFactory.CreateLessHealthTargetTeleportingEntityBrain(_entity, new LessHealthTargetSelector(_entity));
-
-            // L_6 2
-            Entity ghost1 = _entitiesFactory.CreateGhostEntity(Vector3.zero + Vector3.back * 5);
-            _brainsFactory.CreateGhostBrain(ghost1);
-            Entity ghost2 =  _entitiesFactory.CreateGhostEntity(Vector3.zero + Vector3.left * 5);
-            _brainsFactory.CreateGhostBrain(ghost2);
-            Entity ghost3 =  _entitiesFactory.CreateGhostEntity(Vector3.zero + Vector3.right * 5);
-            _brainsFactory.CreateGhostBrain(ghost3);
-            Entity ghost4 = _entitiesFactory.CreateGhostEntity(Vector3.zero + Vector3.forward * 5);
-            _brainsFactory.CreateGhostBrain(ghost4);
-
-            _entity = _entitiesFactory.CreateHeroEntity(Vector3.zero);
-            _brainsFactory.CreateMainHeroBrainL_6(_entity);
+            _entity = _mainHeroFactory.Create(Vector3.zero);
 
             _isRunning = true;
         }

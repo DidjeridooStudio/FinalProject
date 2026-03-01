@@ -1,7 +1,14 @@
+using Assets._Project.Develop.Runtime.Configs.Gameplay.Levels;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Mono;
+using Assets._Project.Develop.Runtime.Gameplay.Features;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
+using Assets._Project.Develop.Runtime.Gameplay.Features.Enemies;
 using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
+using Assets._Project.Develop.Runtime.Gameplay.Features.MainHero;
+using Assets._Project.Develop.Runtime.Gameplay.Features.StageFeature;
+using Assets._Project.Develop.Runtime.Gameplay.Features.Tower;
+using Assets._Project.Develop.Runtime.Gameplay.States;
 using Assets._Project.Develop.Runtime.Gameplay.Utilities;
 using Assets._Project.Develop.Runtime.Infastructure.DI;
 using Assets._Project.Develop.Runtime.Meta.Features;
@@ -10,6 +17,7 @@ using Assets._Project.Develop.Runtime.UI;
 using Assets._Project.Develop.Runtime.UI.Core;
 using Assets._Project.Develop.Runtime.UI.GamePlay;
 using Assets._Project.Develop.Runtime.Utilies.AssetsManagment;
+using Assets._Project.Develop.Runtime.Utilies.ConfigsManagment;
 using Assets._Project.Develop.Runtime.Utilies.CoroutinesManagment;
 using Assets._Project.Develop.Runtime.Utilies.DataManagment.DataProviders;
 using Assets._Project.Develop.Runtime.Utilies.ScenesManagment;
@@ -19,8 +27,22 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
 {
     public class GameplayContextRegistrations
     {
+        private static GameplayInputArgs _gameplayInputArgs;
+
         public static void Process(DIContainer container, GameplayInputArgs args)
         {
+            _gameplayInputArgs = args;
+
+            container.RegisterAsSingle(CreateTowerFactory);
+            container.RegisterAsSingle(CreateTowerHolderService).NonLazy();
+            container.RegisterAsSingle(CreateGameplayStatesContext);
+            container.RegisterAsSingle(CreateGameplayStatesFactory);
+            container.RegisterAsSingle(CreateMainHeroHolderService).NonLazy();
+            container.RegisterAsSingle(CreatePreperationTriggerService);
+            container.RegisterAsSingle(CreateStageProviderService);
+            container.RegisterAsSingle(CreateStagesFactory);
+            container.RegisterAsSingle(CreateEnemiesFactory);
+            container.RegisterAsSingle(CreateMainHeroFactory);
             container.RegisterAsSingle<IInputService>(CreateDesktopInput);
             container.RegisterAsSingle(CreateAIBrainsContext);
             container.RegisterAsSingle(CreateBrainsFactory);
@@ -41,6 +63,39 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
             //container.RegisterAsSingle(CreateReadUserInputService);
             //container.RegisterAsSingle(container => CreateGenerateRandomStringService(container, args));
         }
+
+        private static PlayersEntitiesFactory CreateTowerFactory(DIContainer container) => new PlayersEntitiesFactory(container, container.Resolve<BrainsFactory>());
+
+        private static ToweHolderService CreateTowerHolderService(DIContainer container) => new ToweHolderService(container.Resolve<EntitiesLifeContext>());
+
+        private static GameplayStatesContext CreateGameplayStatesContext(DIContainer container)
+        {
+            return new GameplayStatesContext(container.Resolve<GameplayStatesFactory>().CreateGameplayStateMachine(_gameplayInputArgs));
+        }
+
+        private static GameplayStatesFactory CreateGameplayStatesFactory(DIContainer container) => new GameplayStatesFactory(container);
+
+        private static MainHeroHolderService CreateMainHeroHolderService(DIContainer container) => new MainHeroHolderService(container.Resolve<EntitiesLifeContext>());
+
+        private static PreparationTriggerService CreatePreperationTriggerService(DIContainer container)
+        {
+            return new PreparationTriggerService(
+                container.Resolve<EntitiesFactory>(),
+                container.Resolve<EntitiesLifeContext>());
+        }
+
+        private static StageProviderService CreateStageProviderService(DIContainer container)
+        {
+            return new StageProviderService(
+                _gameplayInputArgs.LevelConfig,
+                container.Resolve<StagesFactory>());
+        }
+
+        private static StagesFactory CreateStagesFactory(DIContainer container) => new StagesFactory(container);
+
+        private static EnemiesFactory CreateEnemiesFactory(DIContainer container) => new EnemiesFactory(container);
+
+        private static MainHeroFactory CreateMainHeroFactory(DIContainer container) => new MainHeroFactory(container);
 
         private static DesktopInput CreateDesktopInput(DIContainer container) => new DesktopInput();
 

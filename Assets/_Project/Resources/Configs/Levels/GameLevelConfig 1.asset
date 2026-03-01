@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f54c2824e4c049a48be281e30f602006, type: 3}
+  m_Name: GameLevelConfig 1
+  m_EditorClassIdentifier: 
+  <TowerPrefabPath>k__BackingField: Entities/TowerEntity
+  <TowerHealth>k__BackingField: 2000
+  <TowerPosition>k__BackingField: {x: -10, y: 0, z: -10}
+  <GoldWinReward>k__BackingField: 15
+  _stageConfigs:
+  - {fileID: 11400000, guid: 0cecdebd37e0c4645ba70400bf9669de, type: 2}
+  - {fileID: 11400000, guid: 0cecdebd37e0c4645ba70400bf9669de, type: 2}
+  - {fileID: 11400000, guid: 0cecdebd37e0c4645ba70400bf9669de, type: 2}

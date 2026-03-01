@@ -1,8 +1,12 @@
-﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+﻿using Assets._Project.Develop.Runtime.Configs.Gameplay;
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI.States;
 using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
+using Assets._Project.Develop.Runtime.Gameplay.Features.StageFeature;
 using Assets._Project.Develop.Runtime.Infastructure.DI;
+using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
 using Assets._Project.Develop.Runtime.Utilies.Conditions;
+using Assets._Project.Develop.Runtime.Utilies.ConfigsManagment;
 using Assets._Project.Develop.Runtime.Utilies.Reactive;
 using Assets._Project.Develop.Runtime.Utilies.Timer;
 using System;
@@ -26,6 +30,63 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI
             _brainsContext = _container.Resolve<AIBrainsContext>();
             _inputService = _container.Resolve<IInputService>();
             _entitiesLifeContext = _container.Resolve<EntitiesLifeContext>();
+        }
+
+        public StateMachineBrain CreatePlayerEntityBrain(Entity entity)
+        {
+            PlayerPreparationState playerPreparationState
+                = new PlayerPreparationState(
+                    entity,
+                    _inputService,
+                    _container.Resolve<ConfigsProviderService>().GetConfig<PlayerEntityConfig>(),
+                    _container.Resolve<WalletService>(),
+                    _container.Resolve<CollidersRegistryService>());
+            PlayerBlowOnMouseClickState playerBlowOnMouseClickState = new PlayerBlowOnMouseClickState(entity, _inputService);
+
+            IInputService inputService = _container.Resolve<IInputService>();
+            StageProviderService stageProviderService = _container.Resolve<StageProviderService>();
+
+            ICompositeCondition preparationToAttackCondition = new CompositeCondition()
+                .Add(new FuncCondition(() => inputService.StartButtonClicked))
+                .Add(new FuncCondition(() => stageProviderService.HasNextStage()));
+
+            ICondition attackToPreparationCondition = new FuncCondition(() => stageProviderService.CurrentStageResult.Value == StageResults.Completed);
+
+            AIStateMachine behaviour = new AIStateMachine();
+
+            behaviour.AddState(playerPreparationState);
+            behaviour.AddState(playerBlowOnMouseClickState);
+
+            behaviour.AddTransition(playerPreparationState, playerBlowOnMouseClickState, preparationToAttackCondition);
+            behaviour.AddTransition(playerBlowOnMouseClickState, playerPreparationState, attackToPreparationCondition);
+
+            StateMachineBrain brain = new StateMachineBrain(behaviour);
+            _brainsContext.SetFor(entity, brain);
+
+            return brain;
+        }
+
+        public StateMachineBrain CreateBlowEntityBrain(Entity entity)
+        {
+            ToweHolderService towerHolderService = _container.Resolve<ToweHolderService>();
+
+            MoveToTargetState moveToTargetState = new MoveToTargetState(entity, towerHolderService.Tower.Transform);
+
+            BlowState blowState = new BlowState(entity);
+
+            ICondition moveToBlowState = new FuncCondition(() => (towerHolderService.Tower.Transform.position - entity.Transform.position).magnitude <= 2f);
+
+            AIStateMachine behaviour = new AIStateMachine();
+
+            behaviour.AddState(moveToTargetState);
+            behaviour.AddState(blowState);
+
+            behaviour.AddTransition(moveToTargetState, blowState, moveToBlowState);
+
+            StateMachineBrain brain = new StateMachineBrain(behaviour);
+            _brainsContext.SetFor(entity, brain);
+
+            return brain;
         }
 
         public StateMachineBrain CreateLessHealthTargetTeleportingEntityBrain(Entity entity, ITargetSelector targetSelector)
@@ -199,7 +260,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI
                         return false;
 
                     float angelToTarget = Quaternion.Angle(transform.rotation, Quaternion.LookRotation(target.Transform.position - transform.position));
-                    return angelToTarget < 1f;
+                    return angelToTarget < 3f;
                 }));
 
             ReactiveVariable<bool> inAttackProcess = entity.InAttackProcess;

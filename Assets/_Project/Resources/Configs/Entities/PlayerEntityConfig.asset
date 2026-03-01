@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 886a8bc38398bac47a07469cc8211b2e, type: 3}
+  m_Name: PlayerEntityConfig
+  m_EditorClassIdentifier: 
+  <PrefabPath>k__BackingField: Entities/PlayerEntity
+  <BlowRadius>k__BackingField: 4
+  <BlowDamage>k__BackingField: 25
+  <MinePrefab>k__BackingField: {fileID: -8512574801367732567, guid: ebfaf8384d0387c4b9b4234aba1b70ac,
+    type: 3}
+  <MinePrice>k__BackingField: 50

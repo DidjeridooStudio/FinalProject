@@ -71,7 +71,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
 
         private void OnGameEnded()
         {
-            _coroutinesPerformer?.StartPerform(_playerDataProvider.Save());
+            _coroutinesPerformer?.StartPerform(_playerDataProvider.SaveAsync());
         }
 
         private void ProcessVictory()

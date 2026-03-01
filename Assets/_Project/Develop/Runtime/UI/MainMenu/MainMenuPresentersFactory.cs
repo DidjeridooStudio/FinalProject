@@ -7,6 +7,7 @@ using Assets._Project.Develop.Runtime.UI.Core.StartGamePopup;
 using Assets._Project.Develop.Runtime.Utilies.ConfigsManagment;
 using Assets._Project.Develop.Runtime.Utilies.CoroutinesManagment;
 using Assets._Project.Develop.Runtime.Utilies.DataManagment.DataProviders;
+using Assets._Project.Develop.Runtime.Utilies.ScenesManagment;
 
 namespace Assets._Project.Develop.Runtime.UI.MainMenu
 {
@@ -20,7 +21,12 @@ namespace Assets._Project.Develop.Runtime.UI.MainMenu
         }
 
         public MainMenuScreenPresenter CreateMainMenuScreenPresenter(MainMenuScreenView view) => 
-            new MainMenuScreenPresenter(view, _container.Resolve<ProjectPresentersFactory>(), _container.Resolve<MainMenuPopupService>());
+            new MainMenuScreenPresenter(
+                view,
+                _container.Resolve<ProjectPresentersFactory>(),
+                _container.Resolve<MainMenuPopupService>(),
+                _container.Resolve<ScenesSwitcherService>(),
+                _container.Resolve<ICoroutinesPerformer>());
 
         public StartGamePopupPresenter CreateStartGamePopupPresenter(StartGamePopupView view)
         {

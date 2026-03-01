@@ -2,6 +2,44 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
 {
 	public partial class Entity
 	{
+		public Assets._Project.Develop.Runtime.Gameplay.Features.Tower.IsTower IsTowerC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.Tower.IsTower>();
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddIsTower()
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.Tower.IsTower() );
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.Features.Tower.IsPlayerEntity IsPlayerShootEntityC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.Tower.IsPlayerEntity>();
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddIsPlayerShootEntity()
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.Tower.IsPlayerEntity() );
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.Features.TeamsFeature.Team TeamC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.TeamsFeature.Team>();
+
+		public Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<Assets._Project.Develop.Runtime.Gameplay.Features.TeamsFeature.Teams> Team => TeamC.Value;
+
+		public bool TryGetTeam(out Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<Assets._Project.Develop.Runtime.Gameplay.Features.TeamsFeature.Teams> value)
+		{
+			bool result = TryGetComponent(out Assets._Project.Develop.Runtime.Gameplay.Features.TeamsFeature.Team component);
+			if(result)
+				value = component.Value;
+			else
+				value = default(Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<Assets._Project.Develop.Runtime.Gameplay.Features.TeamsFeature.Teams>);
+			return result;
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddTeam()
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.TeamsFeature.Team() { Value = new Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<Assets._Project.Develop.Runtime.Gameplay.Features.TeamsFeature.Teams>() });
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddTeam(Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<Assets._Project.Develop.Runtime.Gameplay.Features.TeamsFeature.Teams> value)
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.TeamsFeature.Team() {Value = value});
+		}
+
 		public Assets._Project.Develop.Runtime.Gameplay.Features.Sensors.BodyCollider BodyColliderC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.Sensors.BodyCollider>();
 
 		public UnityEngine.CapsuleCollider BodyCollider => BodyColliderC.Value;
@@ -119,6 +157,30 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
 		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddIsTouchDeathMask(Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<System.Boolean> value)
 		{
 			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.Sensors.IsTouchDeathMask() {Value = value});
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.Features.Sensors.IsTouchAnotherTeam IsTouchAnotherTeamC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.Sensors.IsTouchAnotherTeam>();
+
+		public Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<System.Boolean> IsTouchAnotherTeam => IsTouchAnotherTeamC.Value;
+
+		public bool TryGetIsTouchAnotherTeam(out Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<System.Boolean> value)
+		{
+			bool result = TryGetComponent(out Assets._Project.Develop.Runtime.Gameplay.Features.Sensors.IsTouchAnotherTeam component);
+			if(result)
+				value = component.Value;
+			else
+				value = default(Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<System.Boolean>);
+			return result;
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddIsTouchAnotherTeam()
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.Sensors.IsTouchAnotherTeam() { Value = new Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<System.Boolean>() });
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddIsTouchAnotherTeam(Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<System.Boolean> value)
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.Sensors.IsTouchAnotherTeam() {Value = value});
 		}
 
 		public Assets._Project.Develop.Runtime.Gameplay.Features.RotationFeature.RotateDirection RotateDirectionC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.RotationFeature.RotateDirection>();
@@ -277,6 +339,13 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
 		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddCanMove(Assets._Project.Develop.Runtime.Utilies.Conditions.ICompositeCondition value)
 		{
 			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature.CanMove() {Value = value});
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.Features.MainHero.IsMainHero IsMainHeroC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.MainHero.IsMainHero>();
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddIsMainHero()
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.MainHero.IsMainHero() );
 		}
 
 		public Assets._Project.Develop.Runtime.Gameplay.Features.L_5.TeleportFeature.TeleportationRadius TeleportationRadiusC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.L_5.TeleportFeature.TeleportationRadius>();
@@ -771,6 +840,145 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
 		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddBodyContactDamage(Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<System.Single> value)
 		{
 			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.ContactTakeDamage.BodyContactDamage() {Value = value});
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowRadius BlowRadiusC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowRadius>();
+
+		public Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<System.Single> BlowRadius => BlowRadiusC.Value;
+
+		public bool TryGetBlowRadius(out Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<System.Single> value)
+		{
+			bool result = TryGetComponent(out Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowRadius component);
+			if(result)
+				value = component.Value;
+			else
+				value = default(Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<System.Single>);
+			return result;
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddBlowRadius()
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowRadius() { Value = new Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<System.Single>() });
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddBlowRadius(Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<System.Single> value)
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowRadius() {Value = value});
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowDamage BlowDamageC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowDamage>();
+
+		public Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<System.Single> BlowDamage => BlowDamageC.Value;
+
+		public bool TryGetBlowDamage(out Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<System.Single> value)
+		{
+			bool result = TryGetComponent(out Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowDamage component);
+			if(result)
+				value = component.Value;
+			else
+				value = default(Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<System.Single>);
+			return result;
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddBlowDamage()
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowDamage() { Value = new Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<System.Single>() });
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddBlowDamage(Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveVariable<System.Single> value)
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowDamage() {Value = value});
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowRequest BlowRequestC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowRequest>();
+
+		public Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveEvent<UnityEngine.Vector3> BlowRequest => BlowRequestC.Value;
+
+		public bool TryGetBlowRequest(out Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveEvent<UnityEngine.Vector3> value)
+		{
+			bool result = TryGetComponent(out Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowRequest component);
+			if(result)
+				value = component.Value;
+			else
+				value = default(Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveEvent<UnityEngine.Vector3>);
+			return result;
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddBlowRequest()
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowRequest() { Value = new Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveEvent<UnityEngine.Vector3>() });
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddBlowRequest(Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveEvent<UnityEngine.Vector3> value)
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowRequest() {Value = value});
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowEvent BlowEventC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowEvent>();
+
+		public Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveEvent<UnityEngine.Vector3> BlowEvent => BlowEventC.Value;
+
+		public bool TryGetBlowEvent(out Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveEvent<UnityEngine.Vector3> value)
+		{
+			bool result = TryGetComponent(out Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowEvent component);
+			if(result)
+				value = component.Value;
+			else
+				value = default(Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveEvent<UnityEngine.Vector3>);
+			return result;
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddBlowEvent()
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowEvent() { Value = new Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveEvent<UnityEngine.Vector3>() });
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddBlowEvent(Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveEvent<UnityEngine.Vector3> value)
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowEvent() {Value = value});
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowContactsDetectingEvent BlowContactsDetectingEventC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowContactsDetectingEvent>();
+
+		public Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveEvent BlowContactsDetectingEvent => BlowContactsDetectingEventC.Value;
+
+		public bool TryGetBlowContactsDetectingEvent(out Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveEvent value)
+		{
+			bool result = TryGetComponent(out Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowContactsDetectingEvent component);
+			if(result)
+				value = component.Value;
+			else
+				value = default(Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveEvent);
+			return result;
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddBlowContactsDetectingEvent()
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowContactsDetectingEvent() { Value = new Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveEvent() });
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddBlowContactsDetectingEvent(Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveEvent value)
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowContactsDetectingEvent() {Value = value});
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowEffectComponent BlowEffectC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowEffectComponent>();
+
+		public UnityEngine.ParticleSystem BlowEffect => BlowEffectC.Value;
+
+		public bool TryGetBlowEffect(out UnityEngine.ParticleSystem value)
+		{
+			bool result = TryGetComponent(out Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowEffectComponent component);
+			if(result)
+				value = component.Value;
+			else
+				value = default(UnityEngine.ParticleSystem);
+			return result;
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddBlowEffect(UnityEngine.ParticleSystem value)
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowEffectComponent() {Value = value});
 		}
 
 		public Assets._Project.Develop.Runtime.Gameplay.Features.Attack.StartAttackRequest StartAttackRequestC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.Attack.StartAttackRequest>();

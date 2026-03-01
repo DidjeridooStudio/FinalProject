@@ -1,6 +1,8 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.Features.ApplyDamage;
+using Assets._Project.Develop.Runtime.Gameplay.Features.TeamsFeature;
 using Assets._Project.Develop.Runtime.Utilies.Conditions;
+using Assets._Project.Develop.Runtime.Utilies.Reactive;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -9,12 +11,12 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI.States
 {
     public class NearestDamageableTargetSelector : ITargetSelector
     {
-        private Entity _sources;
+        private Entity _source;
         private Transform _sourcesTransform;
 
         public NearestDamageableTargetSelector(Entity entity)
         {
-            _sources = entity;
+            _source = entity;
             _sourcesTransform = entity.Transform;
         }
 
@@ -29,7 +31,13 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI.States
                     result = result && canApplyDamage.Evaluate();
                 }
 
-                result = result && (target != _sources);
+                if (_source.TryGetTeam(out ReactiveVariable<Teams> sourceTeam)
+                && target.TryGetTeam(out ReactiveVariable<Teams> targetTeam))
+                {
+                    result = result && sourceTeam.Value != targetTeam.Value;
+                }
+
+                result = result && (target != _source);
 
                 return result;
             });

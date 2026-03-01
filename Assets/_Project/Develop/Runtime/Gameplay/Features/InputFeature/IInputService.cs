@@ -11,5 +11,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature
         Vector3 MousePosition { get; }
 
         bool LeftMouseButtonClicked { get; }
+
+        bool QuitButtonClicked { get; }
+
+        bool StartButtonClicked { get; }
     }
 }

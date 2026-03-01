@@ -51,7 +51,7 @@ namespace Assets._Project.Develop.Runtime.Meta.Utilities
                     break;
             }
 
-            _coroutinesPerformer?.StartPerform(_scenesSwitcherService.ProcessSwitchTo(Scenes.Gameplay, new GameplayInputArgs(symbolSet, levelConfig.SymbolsQuanity, levelConfig.MoneyBet)));
+            _coroutinesPerformer?.StartPerform(_scenesSwitcherService.ProcessSwitchTo(Scenes.Gameplay));
         }
     }
 }

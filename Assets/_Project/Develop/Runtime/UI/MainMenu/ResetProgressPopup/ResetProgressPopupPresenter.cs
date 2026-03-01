@@ -97,7 +97,7 @@ namespace Assets._Project.Develop.Runtime.UI.Core.ResetProgressPopup
                     return;
                 }
 
-                _coroutinesPerformer?.StartPerform(_playerDataProvider.Save());
+                _coroutinesPerformer?.StartPerform(_playerDataProvider.SaveAsync());
 
                 OpenMessagePopup("Прогресс успешно сброшен");
             }

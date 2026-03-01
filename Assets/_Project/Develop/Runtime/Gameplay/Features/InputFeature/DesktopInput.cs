@@ -27,7 +27,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature
                 if (IsEnabled == false)
                     return Vector3.zero;
 
-                return Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                //return Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                return Input.mousePosition;
             }
         }
 
@@ -39,6 +40,34 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature
                     return false;
 
                 if (Input.GetKeyDown(KeyCode.Mouse0))
+                    return true;
+
+                return false;
+            }
+        }
+
+        public bool StartButtonClicked
+        {
+            get
+            {
+                if (IsEnabled == false)
+                    return false;
+
+                if (Input.GetKeyDown(KeyCode.S))
+                    return true;
+
+                return false;
+            }
+        }
+
+        public bool QuitButtonClicked
+        {
+            get
+            {
+                if (IsEnabled == false)
+                    return false;
+
+                if (Input.GetKeyDown(KeyCode.Q))
                     return true;
 
                 return false;
