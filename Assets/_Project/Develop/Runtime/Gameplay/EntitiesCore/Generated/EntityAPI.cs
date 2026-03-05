@@ -9,9 +9,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
 			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.Tower.IsTower() );
 		}
 
-		public Assets._Project.Develop.Runtime.Gameplay.Features.Tower.IsPlayerEntity IsPlayerShootEntityC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.Tower.IsPlayerEntity>();
+		public Assets._Project.Develop.Runtime.Gameplay.Features.Tower.IsPlayerEntity IsPlayerEntityC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.Tower.IsPlayerEntity>();
 
-		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddIsPlayerShootEntity()
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddIsPlayerEntity()
 		{
 			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.Tower.IsPlayerEntity() );
 		}
@@ -979,6 +979,30 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
 		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddBlowEffect(UnityEngine.ParticleSystem value)
 		{
 			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.Blow.BlowEffectComponent() {Value = value});
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.Features.Blow.MineSpawnRequest MineSpawnRequestC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.Blow.MineSpawnRequest>();
+
+		public Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveEvent MineSpawnRequest => MineSpawnRequestC.Value;
+
+		public bool TryGetMineSpawnRequest(out Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveEvent value)
+		{
+			bool result = TryGetComponent(out Assets._Project.Develop.Runtime.Gameplay.Features.Blow.MineSpawnRequest component);
+			if(result)
+				value = component.Value;
+			else
+				value = default(Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveEvent);
+			return result;
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddMineSpawnRequest()
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.Blow.MineSpawnRequest() { Value = new Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveEvent() });
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddMineSpawnRequest(Assets._Project.Develop.Runtime.Utilies.Reactive.ReactiveEvent value)
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.Blow.MineSpawnRequest() {Value = value});
 		}
 
 		public Assets._Project.Develop.Runtime.Gameplay.Features.Attack.StartAttackRequest StartAttackRequestC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.Attack.StartAttackRequest>();

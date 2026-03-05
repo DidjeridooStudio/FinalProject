@@ -22,6 +22,7 @@ namespace Assets._Project.Develop.Runtime.Utilies.ConfigsManagment
         {typeof(HeroConfig), "Configs/Entities/HeroConfig" },
         {typeof(GameLevelsListConfig), "Configs/Levels/GameLevelsListConfig" },
         {typeof(PlayerEntityConfig), "Configs/Entities/PlayerEntityConfig" },
+        {typeof(MineEntityConfig), "Configs/Entities/MineEntityConfig" },
     };
 
         public ResourcesConfigsLoader(ResourcesAssetsLoader resourcesAssetsLoader)

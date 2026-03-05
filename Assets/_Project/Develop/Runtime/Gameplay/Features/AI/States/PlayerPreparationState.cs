@@ -10,39 +10,20 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI.States
 {
     public class PlayerPreparationState : State, IUpdatebableState
     {
+        private Entity _player;
         private IInputService _inputService;
-        private PlayerEntityConfig _playerEntityConfig;
-        private WalletService _walletService;
-        private CollidersRegistryService _collidersRegistryService;
 
-        public PlayerPreparationState(Entity entity, IInputService inputService,
-            PlayerEntityConfig playerEntityConfig, WalletService walletService, CollidersRegistryService collidersRegistryService)
+        public PlayerPreparationState(Entity entity, IInputService inputService)
         {
+            _player = entity;
             _inputService = inputService;
-            _playerEntityConfig = playerEntityConfig;
-            _walletService = walletService;
-            _collidersRegistryService = collidersRegistryService;
         }
 
         public void Update(float deltaTime)
         {
             if (_inputService.LeftMouseButtonClicked)
             {
-                if (_walletService.EnoughCurrency(CurrencyTypes.Gold, _playerEntityConfig.MinePrice) == false)
-                {
-                    Debug.Log("Not enough money");
-                    Debug.Log($"Current money {_walletService.GetCurrency(CurrencyTypes.Gold).Value}");
-                    return;
-                }
-
-                Ray ray = Camera.main.ScreenPointToRay(_inputService.MousePosition);
-                if (Physics.Raycast(ray, out RaycastHit hitInfo))
-                {
-                    Mine mine = Object.Instantiate(_playerEntityConfig.MinePrefab, hitInfo.point, Quaternion.identity);
-                    mine.Initialize(_collidersRegistryService);
-                    _walletService.SpendCurrency(CurrencyTypes.Gold, _playerEntityConfig.MinePrice);
-                    Debug.Log($"Current money {_walletService.GetCurrency(CurrencyTypes.Gold).Value}");
-                }
+                _player.MineSpawnRequest?.Invoke();
             }
         }
     }

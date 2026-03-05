@@ -5,7 +5,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
 {
     public abstract class EndGameState : State
     {
-        private readonly IInputService _inputService;
+        protected readonly IInputService _inputService;
 
         protected EndGameState(IInputService inputService)
         {

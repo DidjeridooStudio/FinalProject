@@ -33,4 +33,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Blow
     {
         public ParticleSystem Value;
     }
+
+    public class MineSpawnRequest : IEntityComponent
+    {
+        public ReactiveEvent Value;
+    }
 }

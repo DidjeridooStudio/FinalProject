@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.Features.Blow
 {
-    public class BlowSystem : IInitializableSystem
+    public class BlowSystem : IInitializableSystem, IDisposableSystem
     {
         private ReactiveEvent<Vector3> _blowRequest;
         private ReactiveEvent<Vector3> _blowEvent;

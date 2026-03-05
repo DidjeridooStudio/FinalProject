@@ -39,9 +39,16 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Tower
         {
             Entity entity = _entitiesFactory.CreatePlayerEntity(position, config);
 
-            entity.AddIsPlayerShootEntity();
-
             _brainsFactory.CreatePlayerEntityBrain(entity);
+
+            _entitiesLifeContext.Add(entity);
+
+            return entity;
+        }
+
+        public Entity CreateMineEntity(Vector3 position, MineEntityConfig config)
+        {
+            Entity entity = _entitiesFactory.CreateMineEntity(position, config);
 
             _entitiesLifeContext.Add(entity);
 

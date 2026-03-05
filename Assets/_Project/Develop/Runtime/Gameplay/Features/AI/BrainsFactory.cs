@@ -1,6 +1,7 @@
 ﻿using Assets._Project.Develop.Runtime.Configs.Gameplay;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI.States;
+using Assets._Project.Develop.Runtime.Gameplay.Features.Blow;
 using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.StageFeature;
 using Assets._Project.Develop.Runtime.Infastructure.DI;
@@ -34,14 +35,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI
 
         public StateMachineBrain CreatePlayerEntityBrain(Entity entity)
         {
-            PlayerPreparationState playerPreparationState
-                = new PlayerPreparationState(
-                    entity,
-                    _inputService,
-                    _container.Resolve<ConfigsProviderService>().GetConfig<PlayerEntityConfig>(),
-                    _container.Resolve<WalletService>(),
-                    _container.Resolve<CollidersRegistryService>());
-            PlayerBlowOnMouseClickState playerBlowOnMouseClickState = new PlayerBlowOnMouseClickState(entity, _inputService);
+            PlayerPreparationState playerPreparationState = new PlayerPreparationState(entity, _inputService);
+            PlayerBlowOnMouseClickState playerBlowOnMouseClickState = new PlayerBlowOnMouseClickState(entity, _inputService, _container.Resolve<RaycastOnMousePositionService>());
 
             IInputService inputService = _container.Resolve<IInputService>();
             StageProviderService stageProviderService = _container.Resolve<StageProviderService>();

@@ -13,9 +13,12 @@ using Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.RotationFeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Sensors;
 using Assets._Project.Develop.Runtime.Gameplay.Features.TeamsFeature;
+using Assets._Project.Develop.Runtime.Gameplay.Features.Tower;
 using Assets._Project.Develop.Runtime.Infastructure.DI;
+using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
 using Assets._Project.Develop.Runtime.Utilies;
 using Assets._Project.Develop.Runtime.Utilies.Conditions;
+using Assets._Project.Develop.Runtime.Utilies.ConfigsManagment;
 using Assets._Project.Develop.Runtime.Utilies.Reactive;
 using UnityEngine;
 
@@ -36,6 +39,51 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             _collidersRegistryService = _container.Resolve<CollidersRegistryService>();
         }
 
+        public Entity CreateMineEntity(Vector3 position, MineEntityConfig mineEntityConfig)
+        {
+            Entity entity = CreateEmpty();
+
+            _monoEntitiesFactory.Create(entity, position, mineEntityConfig.PrefabPath);
+
+            entity
+                .AddIsDead()
+                .AddInDeadProcess()
+                .AddDeathProcessInitialTime(new ReactiveVariable<float>(mineEntityConfig.DeathProcessTime))
+                .AddDeathProcessCurrentTime()
+                .AddBlowRequest()
+                .AddBlowEvent()
+                .AddBlowRadius(new ReactiveVariable<float>(mineEntityConfig.BlowRadius))
+                .AddBlowDamage(new ReactiveVariable<float>(mineEntityConfig.BlowDamage))
+                .AddContactsDetectingMask(Layers.CharactersMask)
+                .AddContactsColliderBuffer(new Buffer<Collider>(64))
+                .AddContactsEntitiesBuffer(new Buffer<Entity>(64))
+                .AddBlowContactsDetectingEvent();
+
+            ICompositeCondition mustSelfRelease = new CompositeCondition()
+                .Add(new FuncCondition(() => entity.IsDead.Value))
+                .Add(new FuncCondition(() => entity.InDeadProcess.Value == false));
+
+            ICompositeCondition mustDie = new CompositeCondition()
+                .Add(new FuncCondition(() => entity.IsDead.Value));
+
+            entity
+                .AddMustDie(mustDie)
+                .AddMustSelfRelease(mustSelfRelease);
+
+            entity.AddSystem(new MineDetectingSystem());
+            entity.AddSystem(new BlowContactsDetectingSystem());
+            entity.AddSystem(new BodyContactsEntitiesFilterSystem(_collidersRegistryService));
+            entity.AddSystem(new BlowSystem());
+            entity.AddSystem(new BlowDamageSystem());
+            entity.AddSystem(new DeathAfterBlowDetectorSystem());
+            entity.AddSystem(new DeathSystem());
+            entity.AddSystem(new DisableCollidersOnDeathSystem());
+            entity.AddSystem(new DeathProcessTimerSystem());
+            entity.AddSystem(new SelfReleaseSystem(_entitiesLifeContext));
+
+            return entity;
+        }
+
         public Entity CreatePlayerEntity(Vector3 position, PlayerEntityConfig config)
         {
             Entity entity = CreateEmpty();
@@ -43,6 +91,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             _monoEntitiesFactory.Create(entity, position, config.PrefabPath);
 
             entity
+                .AddMineSpawnRequest()
                 .AddBlowRequest()
                 .AddBlowEvent()
                 .AddBlowRadius(new ReactiveVariable<float>(config.BlowRadius))
@@ -52,6 +101,12 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddContactsEntitiesBuffer(new Buffer<Entity>(64))
                 .AddBlowContactsDetectingEvent();
 
+            entity.AddSystem(new MineSpawnOnMoneySystem(
+                _container.Resolve<PlayersEntitiesFactory>(),
+                _container.Resolve<ConfigsProviderService>().GetConfig<MineEntityConfig>(),
+                _container.Resolve<WalletService>(),
+                _container.Resolve<ConfigsProviderService>().GetConfig<PlayerEntityConfig>(),
+                _container.Resolve<RaycastOnMousePositionService>()));
             entity.AddSystem(new BlowContactsDetectingSystem());
             entity.AddSystem(new BodyContactsEntitiesFilterSystem(_collidersRegistryService));
             entity.AddSystem(new BlowSystem());

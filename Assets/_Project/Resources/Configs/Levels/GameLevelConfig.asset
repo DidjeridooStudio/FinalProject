@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GameLevelConfig
   m_EditorClassIdentifier: 
   <TowerPrefabPath>k__BackingField: Entities/TowerEntity
-  <TowerHealth>k__BackingField: 200
+  <TowerHealth>k__BackingField: 100
   <TowerPosition>k__BackingField: {x: -15, y: 0, z: -14}
   <GoldWinReward>k__BackingField: 20
   _stageConfigs:

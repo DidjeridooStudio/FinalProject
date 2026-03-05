@@ -3,6 +3,7 @@ using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Mono;
 using Assets._Project.Develop.Runtime.Gameplay.Features;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
+using Assets._Project.Develop.Runtime.Gameplay.Features.Blow;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Enemies;
 using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.MainHero;
@@ -33,6 +34,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
         {
             _gameplayInputArgs = args;
 
+            container.RegisterAsSingle(CreateRaycastOnMousePositionService);
             container.RegisterAsSingle(CreateTowerFactory);
             container.RegisterAsSingle(CreateTowerHolderService).NonLazy();
             container.RegisterAsSingle(CreateGameplayStatesContext);
@@ -63,6 +65,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
             //container.RegisterAsSingle(CreateReadUserInputService);
             //container.RegisterAsSingle(container => CreateGenerateRandomStringService(container, args));
         }
+
+        private static RaycastOnMousePositionService CreateRaycastOnMousePositionService(DIContainer container) => new RaycastOnMousePositionService(container.Resolve<IInputService>());
 
         private static PlayersEntitiesFactory CreateTowerFactory(DIContainer container) => new PlayersEntitiesFactory(container, container.Resolve<BrainsFactory>());
 

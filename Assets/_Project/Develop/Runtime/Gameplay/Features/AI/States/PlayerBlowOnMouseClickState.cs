@@ -1,4 +1,5 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+using Assets._Project.Develop.Runtime.Gameplay.Features.Blow;
 using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
 using Assets._Project.Develop.Runtime.Utilies.Reactive;
 using Assets._Project.Develop.Runtime.Utilies.StateMachineCore;
@@ -11,23 +12,25 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI.States
         private IInputService _inputService;
         private ReactiveEvent<Vector3> _blowRequest;
         private Transform _transform;
+        private RaycastOnMousePositionService _raycastOnMousePositionService;
 
-        public PlayerBlowOnMouseClickState(Entity entity, IInputService inputService)
+        public PlayerBlowOnMouseClickState(Entity entity, IInputService inputService, RaycastOnMousePositionService raycastOnMousePositionService)
         {
             _inputService = inputService;
             _blowRequest = entity.BlowRequest;
             _transform = entity.Transform;
+            _raycastOnMousePositionService = raycastOnMousePositionService;
         }
 
         public void Update(float deltaTime)
         {
             if (_inputService.LeftMouseButtonClicked)
             {
-                Ray ray = Camera.main.ScreenPointToRay(_inputService.MousePosition);
-                if (Physics.Raycast(ray, out RaycastHit hitInfo))
+                Vector3 raycastHitPoint = _raycastOnMousePositionService.RaycastHitPoint();
+                if (raycastHitPoint != Vector3.zero)
                 {
-                    _transform.position = hitInfo.point;
-                    _blowRequest.Invoke(hitInfo.point);
+                    _transform.position = raycastHitPoint;
+                    _blowRequest.Invoke(raycastHitPoint);
                 }
             }
         }

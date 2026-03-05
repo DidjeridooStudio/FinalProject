@@ -1,7 +1,6 @@
 ﻿using Assets._Project.Develop.Runtime.Configs.Gameplay.Stages;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Enemies;
-using Assets._Project.Develop.Runtime.Gameplay.Features.Tower;
 using Assets._Project.Develop.Runtime.Utilies.Reactive;
 using System;
 using System.Collections.Generic;

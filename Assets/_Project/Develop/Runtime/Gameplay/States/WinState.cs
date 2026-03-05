@@ -49,7 +49,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
 
         public void Update(float deltaTime)
         {
-            if (Input.GetKeyDown(KeyCode.S))
+            if (_inputService.StartButtonClicked)
                 _coroutinesPerformer.StartPerform(_scenesSwitcherService.ProcessSwitchTo(Scenes.MainMenu));
         }
     }
