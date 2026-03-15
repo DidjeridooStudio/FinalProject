@@ -11,5 +11,9 @@ namespace Assets._Project.Develop.Runtime.UI.Core
         public const string ResetProgressPopup = nameof(ResetProgressPopup);
         public const string MessagePopup = nameof(MessagePopup);
         public const string CheckProgressPopup = nameof(CheckProgressPopup);
+        public const string WinPopup = nameof(WinPopup);
+        public const string DefeatPopup = nameof(DefeatPopup);
+        public const string HealthBar = nameof(HealthBar);
+        public const string SimpleHealthBar = nameof(SimpleHealthBar);
     }
 }

@@ -10,7 +10,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Blow
     {
         private ReactiveEvent<Vector3> _blowRequest;
         private ReactiveEvent<Vector3> _blowEvent;
-        private ParticleSystem _blowEffect;
 
         private IDisposable _blowRequestDisposable;
 
@@ -20,7 +19,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Blow
         {
             _blowRequest = entity.BlowRequest;
             _blowEvent = entity.BlowEvent;
-            _blowEffect = entity.BlowEffect;
 
             _blowRequestDisposable = _blowRequest.Subcribe(OnBlowRequest);
         }
@@ -34,8 +32,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Blow
 
         private void OnBlowRequest(Vector3 position)
         {
-            _blowEffect.Play();
-
             _blowEvent.Invoke(position);
         }
     }

@@ -5,6 +5,7 @@ using Assets._Project.Develop.Runtime.Gameplay.Infastructure;
 using Assets._Project.Develop.Runtime.Infastructure.DI;
 using Assets._Project.Develop.Runtime.Meta.Features;
 using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
+using Assets._Project.Develop.Runtime.UI.GamePlay;
 using Assets._Project.Develop.Runtime.Utilies.Conditions;
 using Assets._Project.Develop.Runtime.Utilies.CoroutinesManagment;
 using Assets._Project.Develop.Runtime.Utilies.DataManagment.DataProviders;
@@ -90,21 +91,21 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
             return new WinState(
                 _container.Resolve<IInputService>(),
                 _container.Resolve<PlayerDataProvider>(),
-                _container.Resolve<ScenesSwitcherService>(),
                 _container.Resolve<ICoroutinesPerformer>(),
                 _container.Resolve<WalletService>(),
                 _container.Resolve<ProgressionService>(),
-                inputArgs);
+                inputArgs,
+                _container.Resolve<GameplayPopupService>());
         }
 
         public DefeatState CreateDefeatState()
         {
             return new DefeatState(
                 _container.Resolve<IInputService>(),
-                _container.Resolve<ScenesSwitcherService>(),
                 _container.Resolve<ICoroutinesPerformer>(),
                 _container.Resolve<ProgressionService>(),
-                _container.Resolve<PlayerDataProvider>());
+                _container.Resolve<PlayerDataProvider>(),
+                _container.Resolve<GameplayPopupService>());
         }
     }
 }

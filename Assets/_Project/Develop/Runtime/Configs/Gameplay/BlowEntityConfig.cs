@@ -12,5 +12,6 @@ namespace Assets._Project.Develop.Runtime.Configs.Gameplay
         [field: SerializeField, Min(0)] public float BlowRadius { get; private set; } = 4;
         [field: SerializeField, Min(0)] public float BlowDamage { get; private set; } = 50;
         [field: SerializeField, Min(0)] public float DeathProcessTime { get; private set; } = 2;
+        [field: SerializeField, Min(0)] public float SpawnProcessTime { get; private set; } = 2;
     }
 }

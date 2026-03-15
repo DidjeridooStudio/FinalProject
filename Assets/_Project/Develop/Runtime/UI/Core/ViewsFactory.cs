@@ -19,6 +19,10 @@ namespace Assets._Project.Develop.Runtime.UI.Core
             {ViewsIDs.ResetProgressPopup, "UI/ResetProgressPopup" },
             {ViewsIDs.MessagePopup, "UI/MessagePopup" },
             {ViewsIDs.CheckProgressPopup, "UI/CheckProgressPopup" },
+            {ViewsIDs.WinPopup, "UI/WinPopup" },
+            {ViewsIDs.DefeatPopup, "UI/DefeatPopup" },
+            {ViewsIDs.HealthBar, "UI/HealthBar" },
+            {ViewsIDs.SimpleHealthBar, "UI/SimpleHealthBar" },
         };
 
         public ViewsFactory(ResourcesAssetsLoader resourcesAssetsLoader)

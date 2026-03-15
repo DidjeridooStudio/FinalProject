@@ -34,6 +34,11 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
         {
             _gameplayInputArgs = args;
 
+            container.RegisterAsSingle(CreateGameplayPopupService);
+            container.RegisterAsSingle(CreateGameplayScreenPresenter).NonLazy();
+            container.RegisterAsSingle(CreateGameplayPresentersFactory);
+            container.RegisterAsSingle(CreateGameplayUIRoot).NonLazy();
+
             container.RegisterAsSingle(CreateRaycastOnMousePositionService);
             container.RegisterAsSingle(CreateTowerFactory);
             container.RegisterAsSingle(CreateTowerHolderService).NonLazy();
@@ -54,12 +59,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
             container.RegisterAsSingle(CreateEntitiesFactory);
 
 
-
-
-            //container.RegisterAsSingle(CreateGameplayPopupService);
-            //container.RegisterAsSingle(CreateGameplayScreenPresenter).NonLazy();
-            //container.RegisterAsSingle(CreateGameplayPresentersFactory);
-            //container.RegisterAsSingle(CreateGameplayUIRoot).NonLazy();
             //container.RegisterAsSingle(container => CreateGameplayCircleL3(container, args));
             //container.RegisterAsSingle(container => CreateGameplayCircle(container, args));
             //container.RegisterAsSingle(CreateReadUserInputService);

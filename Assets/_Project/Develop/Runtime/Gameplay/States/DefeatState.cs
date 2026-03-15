@@ -1,47 +1,44 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
 using Assets._Project.Develop.Runtime.Meta.Features;
+using Assets._Project.Develop.Runtime.UI.GamePlay;
 using Assets._Project.Develop.Runtime.Utilies.CoroutinesManagment;
 using Assets._Project.Develop.Runtime.Utilies.DataManagment.DataProviders;
-using Assets._Project.Develop.Runtime.Utilies.ScenesManagment;
 using Assets._Project.Develop.Runtime.Utilies.StateMachineCore;
-using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.States
 {
     public class DefeatState : EndGameState, IUpdatebableState
     {
-        private readonly ScenesSwitcherService _scenesSwitcherService;
         private readonly ICoroutinesPerformer _coroutinesPerformer;
         private readonly ProgressionService _progressionService;
         private readonly PlayerDataProvider _playerDataProvider;
+        private readonly GameplayPopupService _popupService;
 
         public DefeatState(
             IInputService inputService,
-            ScenesSwitcherService scenesSwitcherService,
             ICoroutinesPerformer coroutinesPerformer,
             ProgressionService progressionService,
-            PlayerDataProvider playerDataProvider) : base(inputService)
+            PlayerDataProvider playerDataProvider,
+            GameplayPopupService popupService) : base(inputService)
         {
-            _scenesSwitcherService = scenesSwitcherService;
             _coroutinesPerformer = coroutinesPerformer;
             _progressionService = progressionService;
             _playerDataProvider = playerDataProvider;
+            _popupService = popupService;
         }
 
         public override void Enter()
         {
             base.Enter();
 
-            Debug.Log("Loose");
-
             _progressionService.IncreaseLosses();
             _coroutinesPerformer.StartPerform(_playerDataProvider.SaveAsync());
+
+            _popupService.OpenDefeatPopup();
         }
 
         public void Update(float deltaTime)
         {
-            if (_inputService.StartButtonClicked)
-                _coroutinesPerformer.StartPerform(_scenesSwitcherService.ProcessSwitchTo(Scenes.MainMenu));
         }
     }
 }

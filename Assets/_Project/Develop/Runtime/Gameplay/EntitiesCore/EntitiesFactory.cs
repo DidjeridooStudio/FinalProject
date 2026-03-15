@@ -12,6 +12,7 @@ using Assets._Project.Develop.Runtime.Gameplay.Features.LifeCycle;
 using Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.RotationFeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Sensors;
+using Assets._Project.Develop.Runtime.Gameplay.Features.SpawnFeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.TeamsFeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Tower;
 using Assets._Project.Develop.Runtime.Infastructure.DI;
@@ -21,6 +22,7 @@ using Assets._Project.Develop.Runtime.Utilies.Conditions;
 using Assets._Project.Develop.Runtime.Utilies.ConfigsManagment;
 using Assets._Project.Develop.Runtime.Utilies.Reactive;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
 {
@@ -57,7 +59,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddContactsDetectingMask(Layers.CharactersMask)
                 .AddContactsColliderBuffer(new Buffer<Collider>(64))
                 .AddContactsEntitiesBuffer(new Buffer<Entity>(64))
-                .AddBlowContactsDetectingEvent();
+                .AddBlowContactsDetectingEvent()
+                .AddTeam(new ReactiveVariable<Teams>(Teams.MainHero));
 
             ICompositeCondition mustSelfRelease = new CompositeCondition()
                 .Add(new FuncCondition(() => entity.IsDead.Value))
@@ -99,7 +102,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddContactsDetectingMask(Layers.CharactersMask)
                 .AddContactsColliderBuffer(new Buffer<Collider>(64))
                 .AddContactsEntitiesBuffer(new Buffer<Entity>(64))
-                .AddBlowContactsDetectingEvent();
+                .AddBlowContactsDetectingEvent()
+                .AddTeam(new ReactiveVariable<Teams>(Teams.MainHero));
 
             entity.AddSystem(new MineSpawnOnMoneySystem(
                 _container.Resolve<PlayersEntitiesFactory>(),
@@ -129,7 +133,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddDeathProcessInitialTime(new ReactiveVariable<float>(2))
                 .AddDeathProcessCurrentTime()
                 .AddTakeDamageRequest()
-                .AddTakeDamageEvent();
+                .AddTakeDamageEvent()
+                .AddTeam(new ReactiveVariable<Teams>(Teams.MainHero));
 
             ICompositeCondition mustDie = new CompositeCondition()
                 .Add(new FuncCondition(() => entity.CurrentHealth.Value <= 0));
@@ -182,13 +187,18 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddContactsDetectingMask(Layers.TowerMask)
                 .AddContactsColliderBuffer(new Buffer<Collider>(64))
                 .AddContactsEntitiesBuffer(new Buffer<Entity>(64))
-                .AddBlowContactsDetectingEvent();
+                .AddBlowContactsDetectingEvent()
+                .AddSpawnInitialTime(new ReactiveVariable<float>(blowEntityConfig.SpawnProcessTime))
+                .AddSpawnCurrentTime()
+                .AddInSpawnProcess();
 
             ICompositeCondition canMove = new CompositeCondition()
-                .Add(new FuncCondition(() => entity.IsDead.Value == false));
+                .Add(new FuncCondition(() => entity.IsDead.Value == false))
+                .Add(new FuncCondition(() => entity.InSpawnProcess.Value == false));
 
             ICompositeCondition canRotate = new CompositeCondition()
-                .Add(new FuncCondition(() => entity.IsDead.Value == false));
+                .Add(new FuncCondition(() => entity.IsDead.Value == false))
+                .Add(new FuncCondition(() => entity.InSpawnProcess.Value == false));
 
             ICompositeCondition mustDie = new CompositeCondition()
                 .Add(new FuncCondition(() => entity.CurrentHealth.Value <= 0));
@@ -198,7 +208,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .Add(new FuncCondition(() => entity.InDeadProcess.Value == false));
 
             ICompositeCondition canApplyDamage = new CompositeCondition()
-                .Add(new FuncCondition(() => entity.IsDead.Value == false));
+                .Add(new FuncCondition(() => entity.IsDead.Value == false))
+                .Add(new FuncCondition(() => entity.InSpawnProcess.Value == false));
 
             entity
                 .AddCanMove(canMove)
@@ -207,6 +218,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddMustSelfRelease(mustSelfRelease)
                 .AddCanApplyDamage(canApplyDamage);
 
+            entity.AddSystem(new SpawnProcessTimerSystem());
             entity.AddSystem(new RigidbodyMovementSystem());
             entity.AddSystem(new RigidbodyRotationSystem());
             entity.AddSystem(new BlowContactsDetectingSystem());

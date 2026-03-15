@@ -18,4 +18,5 @@ MonoBehaviour:
   <MaxHealth>k__BackingField: 100
   <BlowRadius>k__BackingField: 4
   <BlowDamage>k__BackingField: 50
-  <DeathProcessTime>k__BackingField: 0.3
+  <DeathProcessTime>k__BackingField: 1
+  <SpawnProcessTime>k__BackingField: 0.8333

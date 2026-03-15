@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <TowerPrefabPath>k__BackingField: Entities/TowerEntity
   <TowerHealth>k__BackingField: 100
-  <TowerPosition>k__BackingField: {x: -10, y: 0, z: -10}
+  <TowerPosition>k__BackingField: {x: 0, y: 0, z: -10}
   <GoldWinReward>k__BackingField: 15
   _stageConfigs:
   - {fileID: 11400000, guid: 0cecdebd37e0c4645ba70400bf9669de, type: 2}

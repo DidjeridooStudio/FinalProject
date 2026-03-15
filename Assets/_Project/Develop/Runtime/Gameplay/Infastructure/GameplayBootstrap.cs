@@ -6,6 +6,7 @@ using Assets._Project.Develop.Runtime.Gameplay.Features.Tower;
 using Assets._Project.Develop.Runtime.Gameplay.States;
 using Assets._Project.Develop.Runtime.Infastructure;
 using Assets._Project.Develop.Runtime.Infastructure.DI;
+using Assets._Project.Develop.Runtime.UI.GamePlay;
 using Assets._Project.Develop.Runtime.Utilies.ConfigsManagment;
 using Assets._Project.Develop.Runtime.Utilies.ScenesManagment;
 using System;
@@ -23,6 +24,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
         private GameplayStatesContext _gameplayStatesContext;
         private EntitiesLifeContext _entitiesLifeContext;
         private AIBrainsContext _brainsContext;
+        private GameplayScreenPresenter _screenPresenter;
 
         public override void ProcessRegistrations(DIContainer container, IInputSceneArgs sceneArgs = null)
         {
@@ -52,6 +54,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
             _entitiesLifeContext = _container.Resolve<EntitiesLifeContext>();
             _brainsContext = _container.Resolve<AIBrainsContext>();
             _gameplayStatesContext = _container.Resolve<GameplayStatesContext>();
+            _screenPresenter = _container.Resolve<GameplayScreenPresenter>();
 
             PlayersEntitiesFactory playersEntitiesFactory = _container.Resolve<PlayersEntitiesFactory>();
             playersEntitiesFactory.CreateTower(_inputArgs.LevelConfig);
@@ -70,6 +73,11 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
             _brainsContext?.Update(Time.deltaTime);
             _entitiesLifeContext?.Update(Time.deltaTime);
             _gameplayStatesContext?.Update(Time.deltaTime);
+        }
+
+        private void LateUpdate()
+        {
+            _screenPresenter?.LateUpdate();
         }
     }
 }
