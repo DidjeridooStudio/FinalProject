@@ -3,6 +3,7 @@ using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
 using Assets._Project.Develop.Runtime.Utilies;
 using Assets._Project.Develop.Runtime.Utilies.Reactive;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.Features.Blow
 {
@@ -11,6 +12,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Blow
         private Entity _entity;
         private ReactiveVariable<float> _blowDamage;
         private Buffer<Entity> _contacts;
+        private Buffer<Collider> _contactsColliders;
 
         private List<Entity> _processedEntities;
 
@@ -21,6 +23,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Blow
             _entity = entity;
             _blowDamage = entity.BlowDamage;
             _contacts = entity.ContactsEntitiesBuffer;
+            _contactsColliders = entity.ContactsColliderBuffer;
 
             _processedEntities = new List<Entity>(_contacts.Items.Length);
         }
@@ -40,7 +43,10 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Blow
             }
 
             if (_contacts.Count > 0)
+            {
                 _contacts.Count = 0;
+                _contactsColliders.Count = 0;
+            }
 
             for (int i = _processedEntities.Count - 1; i >= 0; i--)
                 if (ContainInContacts(_processedEntities[i]) == false)

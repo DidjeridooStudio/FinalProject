@@ -2,6 +2,7 @@ using Assets._Project.Develop.Runtime.Configs.Gameplay.Levels;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Mono;
 using Assets._Project.Develop.Runtime.Gameplay.Features;
+using Assets._Project.Develop.Runtime.Gameplay.Features.AbilitiesFeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Blow;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Enemies;
@@ -34,6 +35,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
         {
             _gameplayInputArgs = args;
 
+            container.RegisterAsSingle(CreateAbilityFactory);
+
             container.RegisterAsSingle(CreateGameplayPopupService);
             container.RegisterAsSingle(CreateGameplayScreenPresenter).NonLazy();
             container.RegisterAsSingle(CreateGameplayPresentersFactory);
@@ -42,6 +45,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
             container.RegisterAsSingle(CreateRaycastOnMousePositionService);
             container.RegisterAsSingle(CreateTowerFactory);
             container.RegisterAsSingle(CreateTowerHolderService).NonLazy();
+            container.RegisterAsSingle(CreatePlayerHolderService).NonLazy();
             container.RegisterAsSingle(CreateGameplayStatesContext);
             container.RegisterAsSingle(CreateGameplayStatesFactory);
             container.RegisterAsSingle(CreateMainHeroHolderService).NonLazy();
@@ -65,12 +69,16 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infastructure
             //container.RegisterAsSingle(container => CreateGenerateRandomStringService(container, args));
         }
 
+        private static AbilityFactory CreateAbilityFactory(DIContainer container) => new AbilityFactory(container);
+
         private static RaycastOnMousePositionService CreateRaycastOnMousePositionService(DIContainer container) => new RaycastOnMousePositionService(container.Resolve<IInputService>());
 
         private static PlayersEntitiesFactory CreateTowerFactory(DIContainer container) => new PlayersEntitiesFactory(container, container.Resolve<BrainsFactory>());
 
-        private static ToweHolderService CreateTowerHolderService(DIContainer container) => new ToweHolderService(container.Resolve<EntitiesLifeContext>());
-
+        private static TowerHolderService CreateTowerHolderService(DIContainer container) => new TowerHolderService(container.Resolve<EntitiesLifeContext>());
+        
+        private static PlayerHolderService CreatePlayerHolderService(DIContainer container) => new PlayerHolderService(container.Resolve<EntitiesLifeContext>());
+        
         private static GameplayStatesContext CreateGameplayStatesContext(DIContainer container)
         {
             return new GameplayStatesContext(container.Resolve<GameplayStatesFactory>().CreateGameplayStateMachine(_gameplayInputArgs));

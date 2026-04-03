@@ -27,8 +27,8 @@ namespace Assets._Project.Develop.Runtime.UI.GamePlay.HealthPresenter
 
         public void Initialize()
         {
-            _lifeContext.Added -= OnEntityAdded;
-            _lifeContext.Released -= OnEntityReleased;
+            _lifeContext.Added += OnEntityAdded;
+            _lifeContext.Released += OnEntityReleased;
 
             foreach (Entity entity in _lifeContext.Entities)
                 OnEntityAdded(entity);
@@ -61,6 +61,8 @@ namespace Assets._Project.Develop.Runtime.UI.GamePlay.HealthPresenter
                     view = _viewsFactory.Create<BarWithText>(ViewsIDs.HealthBar);
                 else
                     view = _viewsFactory.Create<BarWithText>(ViewsIDs.SimpleHealthBar);
+
+                _view.Add(view);
 
                 EntityHealthPresenter presenter = _presentersFactory.CreateEntityHealthPresenter(entity, view);
                 presenter.Initialize();

@@ -11,6 +11,7 @@ namespace Assets._Project.Develop.Runtime.Configs.Gameplay.Levels
         [field: SerializeField] public float TowerHealth { get; private set; }
         [field: SerializeField] public Vector3 TowerPosition { get; private set; }
         [field: SerializeField] public int GoldWinReward { get; private set; }
+        [field: SerializeField] public int DiamondWinReward { get; private set; }
 
         [SerializeField] private List<StageConfig> _stageConfigs;
 

@@ -1,0 +1,29 @@
+﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
+
+namespace Assets._Project.Develop.Runtime.Gameplay.Features.AbilitiesFeature
+{
+    public class AbilityOnAddActivatorSystem : IInitializableSystem, IDisposableSystem
+    {
+        private AbilitiesList _abilitiesList;
+
+        public void OnInit(Entity entity)
+        {
+            _abilitiesList = entity.Abilities;
+            _abilitiesList.Added += OnAbilityAdded;
+
+            foreach (var ability in _abilitiesList.Abilities)
+                ability.Activate();
+        }
+
+        public void OnDispose()
+        {
+            _abilitiesList.Added -= OnAbilityAdded;
+        }
+
+        private void OnAbilityAdded(Ability ability)
+        {
+            ability.Activate();
+        }
+    }
+}

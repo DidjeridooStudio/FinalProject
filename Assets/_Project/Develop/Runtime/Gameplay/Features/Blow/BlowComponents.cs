@@ -1,4 +1,5 @@
-﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+﻿using Assets._Project.Develop.Runtime.Configs.Gameplay;
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Utilies.Reactive;
 using UnityEngine;
 
@@ -36,6 +37,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Blow
 
     public class MineSpawnRequest : IEntityComponent
     {
-        public ReactiveEvent Value;
+        public ReactiveEvent<EntityConfig> Value;
     }
 }

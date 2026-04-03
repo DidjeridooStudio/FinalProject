@@ -27,7 +27,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
         {
             IInputService inputService = _container.Resolve<IInputService>();
             StageProviderService stageProviderService = _container.Resolve<StageProviderService>();
-            ToweHolderService towerHolderService = _container.Resolve<ToweHolderService>();
+            TowerHolderService towerHolderService = _container.Resolve<TowerHolderService>();
 
             GameplayStateMachine coreLoopState = CreateCoreLoopState();
             WinState winState = CreateWinState(inputArgs);
@@ -82,7 +82,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
             return coreLoopState;
         }
 
-        public PreparationState CreatePreparationState() => new PreparationState(_container.Resolve<PreparationTriggerService>());
+        public PreparationState CreatePreparationState() => new PreparationState(_container.Resolve<GameplayPopupService>());
 
         public StageProcessState CreateStageProcessState() => new StageProcessState(_container.Resolve<StageProviderService>());
 

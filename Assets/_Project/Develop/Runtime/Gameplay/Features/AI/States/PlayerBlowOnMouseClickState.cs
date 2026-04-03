@@ -13,6 +13,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI.States
         private ReactiveEvent<Vector3> _blowRequest;
         private Transform _transform;
         private RaycastOnMousePositionService _raycastOnMousePositionService;
+        private ReactiveEvent _startClearAllEnemiesStageEvent;
 
         public PlayerBlowOnMouseClickState(Entity entity, IInputService inputService, RaycastOnMousePositionService raycastOnMousePositionService)
         {
@@ -20,6 +21,14 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI.States
             _blowRequest = entity.BlowRequest;
             _transform = entity.Transform;
             _raycastOnMousePositionService = raycastOnMousePositionService;
+            _startClearAllEnemiesStageEvent = entity.StartClearAllEnemiesStageEvent;
+        }
+
+        public override void Enter()
+        {
+            base.Enter();
+
+            _startClearAllEnemiesStageEvent?.Invoke();
         }
 
         public void Update(float deltaTime)

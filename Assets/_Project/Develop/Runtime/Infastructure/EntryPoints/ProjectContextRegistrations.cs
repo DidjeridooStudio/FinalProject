@@ -1,5 +1,6 @@
 using Assets._Project.Develop.Runtime.Infastructure.DI;
 using Assets._Project.Develop.Runtime.Meta.Features;
+using Assets._Project.Develop.Runtime.Meta.Features.StatsUpgrade;
 using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
 using Assets._Project.Develop.Runtime.UI;
 using Assets._Project.Develop.Runtime.UI.Core;
@@ -26,6 +27,7 @@ namespace Assets._Project.Develop.Runtime.Infastructure.EntryPoints
     {
         public static void Process(DIContainer container)
         {
+            container.RegisterAsSingle(CreateStatsUpgradeService).NonLazy();
             container.RegisterAsSingle(CreateTimerServiceFactory);
             container.RegisterAsSingle(CreateViewsFactory);
             container.RegisterAsSingle(CreateProjectPresentersFactory);
@@ -39,6 +41,11 @@ namespace Assets._Project.Develop.Runtime.Infastructure.EntryPoints
             container.RegisterAsSingle(CreateConfigsProviderService);
             container.RegisterAsSingle(CreateResourcesAssetsLoader);
             container.RegisterAsSingle<ICoroutinesPerformer>(CreateCoroutinesPerformer);
+        }
+
+        private static StatsUpgradeService CreateStatsUpgradeService(DIContainer container)
+        {
+            return new StatsUpgradeService(container.Resolve<PlayerDataProvider>(), container.Resolve<ConfigsProviderService>());
         }
 
         private static TimerServiceFactory CreateTimerServiceFactory(DIContainer container) => new TimerServiceFactory(container);

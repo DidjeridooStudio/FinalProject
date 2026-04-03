@@ -12,22 +12,18 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Blow
     public class MineSpawnOnMoneySystem : IInitializableSystem, IDisposableSystem
     {
         private PlayersEntitiesFactory _playersEntitiesFactory;
-        private MineEntityConfig _mineEntityConfig;
         private WalletService _walletService;
-        private PlayerEntityConfig _playerEntityConfig;
         private RaycastOnMousePositionService _raycastOnMousePositionService;
 
-        private ReactiveEvent _mineSpawnRequest;
+        private ReactiveEvent<EntityConfig> _mineSpawnRequest;
 
         private IDisposable _mineSpawnRequestDisposable;
 
-        public MineSpawnOnMoneySystem(PlayersEntitiesFactory playersEntitiesFactory, MineEntityConfig mineEntityConfig,
-            WalletService walletService, PlayerEntityConfig playerEntityConfig, RaycastOnMousePositionService raycastOnMousePositionService)
+        public MineSpawnOnMoneySystem(PlayersEntitiesFactory playersEntitiesFactory,
+            WalletService walletService, RaycastOnMousePositionService raycastOnMousePositionService)
         {
             _playersEntitiesFactory = playersEntitiesFactory;
-            _mineEntityConfig = mineEntityConfig;
             _walletService = walletService;
-            _playerEntityConfig = playerEntityConfig;
             _raycastOnMousePositionService = raycastOnMousePositionService;
         }
 
@@ -47,22 +43,60 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Blow
 
         #endregion
 
-        private void OnMineSpawnRequest()
+        private void OnMineSpawnRequest(EntityConfig entityConfig)
         {
-            if (_walletService.EnoughCurrency(CurrencyTypes.Gold, _playerEntityConfig.MinePrice) == false)
+            switch (entityConfig)
             {
-                Debug.Log("Not enough money");
-                Debug.Log($"Current money {_walletService.GetCurrency(CurrencyTypes.Gold).Value}");
-                return;
+                case MineEntityConfig mineEntityConfig:
+                    CreateMineEntity(mineEntityConfig);
+                    break;
+                case ToxicPuddleConfig toxicPuddleConfig:
+                    CreateToxicPuddleEntity(toxicPuddleConfig);
+                    break;
+                case TurretEntityConfig turretEntityConfig:
+                    CreateTurretPuddleEntity(turretEntityConfig);
+                    break;
+                default:
+                    throw new ArgumentException($"Not support {entityConfig.GetType()} type of configs");
             }
+        }
+
+        private void CreateMineEntity(MineEntityConfig mineEntityConfig)
+        {
+            if (_walletService.EnoughCurrency(CurrencyTypes.Gold, mineEntityConfig.SpawnPrice) == false)
+                return;
 
             Vector3 raycastHitPoint = _raycastOnMousePositionService.RaycastHitPoint();
             if (raycastHitPoint != Vector3.zero)
             {
-                _playersEntitiesFactory.CreateMineEntity(raycastHitPoint, _mineEntityConfig);
+                _playersEntitiesFactory.CreateMineEntity(raycastHitPoint, mineEntityConfig);
+                _walletService.SpendCurrency(CurrencyTypes.Gold, mineEntityConfig.SpawnPrice);
+            }
+        }
 
-                _walletService.SpendCurrency(CurrencyTypes.Gold, _playerEntityConfig.MinePrice);
-                Debug.Log($"Current money {_walletService.GetCurrency(CurrencyTypes.Gold).Value}");
+        private void CreateToxicPuddleEntity(ToxicPuddleConfig toxicPuddleConfig)
+        {
+            if (_walletService.EnoughCurrency(CurrencyTypes.Gold, toxicPuddleConfig.SpawnPrice) == false)
+                return;
+
+            Vector3 raycastHitPoint = _raycastOnMousePositionService.RaycastHitPoint();
+            if (raycastHitPoint != Vector3.zero)
+            {
+                _playersEntitiesFactory.CreateToxicPuddleEntity(raycastHitPoint, toxicPuddleConfig);
+                _walletService.SpendCurrency(CurrencyTypes.Gold, toxicPuddleConfig.SpawnPrice);
+            }
+        }
+
+        private void CreateTurretPuddleEntity(TurretEntityConfig turretEntityConfig)
+        {
+            if (_walletService.EnoughCurrency(CurrencyTypes.Gold, turretEntityConfig.SpawnPrice) == false)
+                return;
+
+            Vector3 raycastHitPoint = _raycastOnMousePositionService.RaycastHitPoint();
+            if (raycastHitPoint != Vector3.zero)
+            {
+                _playersEntitiesFactory.CreateTurretEntity(raycastHitPoint, turretEntityConfig);
+                _walletService.SpendCurrency(CurrencyTypes.Gold, turretEntityConfig.SpawnPrice);
             }
         }
     }

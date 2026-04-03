@@ -1,6 +1,4 @@
-﻿using Assets._Project.Develop.Runtime.UI.Core.CheckProgressPopup;
-
-namespace Assets._Project.Develop.Runtime.UI.Core
+﻿namespace Assets._Project.Develop.Runtime.UI.Core
 {
     public class ViewsIDs
     {
@@ -15,5 +13,8 @@ namespace Assets._Project.Develop.Runtime.UI.Core
         public const string DefeatPopup = nameof(DefeatPopup);
         public const string HealthBar = nameof(HealthBar);
         public const string SimpleHealthBar = nameof(SimpleHealthBar);
+        public const string UpgradableStatView = nameof(UpgradableStatView);
+        public const string StatsUpgradePopupView = nameof(StatsUpgradePopupView);
+        public const string PreparationStatePopup = nameof(PreparationStatePopup);
     }
 }

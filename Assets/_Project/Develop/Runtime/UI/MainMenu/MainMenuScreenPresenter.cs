@@ -1,6 +1,4 @@
-﻿using Assets._Project.Develop.Runtime.Configs.Meta;
-using Assets._Project.Develop.Runtime.Gameplay.Infastructure;
-using Assets._Project.Develop.Runtime.UI.Core;
+﻿using Assets._Project.Develop.Runtime.UI.Core;
 using Assets._Project.Develop.Runtime.UI.Wallet;
 using Assets._Project.Develop.Runtime.Utilies.CoroutinesManagment;
 using Assets._Project.Develop.Runtime.Utilies.ScenesManagment;
@@ -33,6 +31,7 @@ namespace Assets._Project.Develop.Runtime.UI.MainMenu
         {
             _screenView.OpenPopupStartGameButtonClicked += OnOpenPopupStartGameButtonClicked;
             _screenView.OpenPopupResetProgressClicked += OnOpenPopupResetProgressClicked;
+            _screenView.OpenStatsUpgradeButtonClicked += OnOpenStatsUpgradeButtonClicked;
 
             CreateWalletPresenter();
             CreateProgressionPresenter();
@@ -45,6 +44,7 @@ namespace Assets._Project.Develop.Runtime.UI.MainMenu
         {
             _screenView.OpenPopupStartGameButtonClicked -= OnOpenPopupStartGameButtonClicked;
             _screenView.OpenPopupResetProgressClicked += OnOpenPopupResetProgressClicked;
+            _screenView.OpenStatsUpgradeButtonClicked -= OnOpenStatsUpgradeButtonClicked;
 
             foreach (IPresenter presenter in _childPresenters)
                 presenter.Dispose();
@@ -71,5 +71,7 @@ namespace Assets._Project.Develop.Runtime.UI.MainMenu
         //private void OnOpenPopupStartGameButtonClicked() => _menuPopupService.OpenStartGamePopup();
         private void OnOpenPopupStartGameButtonClicked() => _coroutinesPerformer?.StartPerform(_scenesSwitcherService.ProcessSwitchTo(Scenes.Gameplay));
         private void OnOpenPopupResetProgressClicked() => _menuPopupService.OpenResetProgress();
+
+        private void OnOpenStatsUpgradeButtonClicked() => _menuPopupService.OpenStatsUpgradePopup();
     }
 }

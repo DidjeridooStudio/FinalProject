@@ -15,8 +15,8 @@ MonoBehaviour:
   <PrefabPath>k__BackingField: Entities/BlowEntity
   <MoveSpeed>k__BackingField: 5
   <RotationSpeed>k__BackingField: 900
-  <MaxHealth>k__BackingField: 100
+  <MaxHealth>k__BackingField: 50
   <BlowRadius>k__BackingField: 4
   <BlowDamage>k__BackingField: 50
   <DeathProcessTime>k__BackingField: 1
-  <SpawnProcessTime>k__BackingField: 0.8333
+  <SpawnProcessTime>k__BackingField: 0.83333

@@ -40,6 +40,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
             base.Enter();
 
             _walletService.AddCurrency(CurrencyTypes.Gold, _inputArgs.LevelConfig.GoldWinReward);
+            _walletService.AddCurrency(CurrencyTypes.Diamond, _inputArgs.LevelConfig.DiamondWinReward);
             _progressionService.IncreaseWinnings();
             _coroutinesPerformer.StartPerform(_playerDataProvider.SaveAsync());
 

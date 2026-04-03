@@ -279,8 +279,32 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c40716beaf3edc7478ca36b534380187,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6363645431601302909}
   m_SourcePrefab: {fileID: 100100000, guid: c40716beaf3edc7478ca36b534380187, type: 3}
+--- !u!1 &1259308674872164689 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: c40716beaf3edc7478ca36b534380187,
+    type: 3}
+  m_PrefabInstance: {fileID: 2141636723000474624}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6363645431601302909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1259308674872164689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19a468c2ee8408f46b3aed1062af640f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _healEffectPrefab: {fileID: 19807068, guid: 987e080b62166be44997bafc0fbcc471, type: 3}
+  _effectSpawnPoint: {fileID: 9156743676647040855}
 --- !u!4 &1887613240727477227 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c40716beaf3edc7478ca36b534380187,

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <PrefabPath>k__BackingField: Entities/PlayerEntity
   <BlowRadius>k__BackingField: 4
-  <BlowDamage>k__BackingField: 25
+  <BlowDamage>k__BackingField: 49
   <MinePrefab>k__BackingField: {fileID: -8512574801367732567, guid: ebfaf8384d0387c4b9b4234aba1b70ac,
     type: 3}
   <MinePrice>k__BackingField: 1

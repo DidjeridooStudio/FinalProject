@@ -1,5 +1,6 @@
 ﻿using Assets._Project.Develop.Runtime.UI.Core;
 using Assets._Project.Develop.Runtime.UI.Core.CheckProgressPopup;
+using Assets._Project.Develop.Runtime.UI.GamePlay.PreparationStatePopup;
 using Assets._Project.Develop.Runtime.UI.GamePlay.ResultsPopups;
 using System;
 using UnityEngine;
@@ -22,6 +23,17 @@ namespace Assets._Project.Develop.Runtime.UI.GamePlay
         }
 
         protected override Transform PopupLayer => _uiRoot.PopupsLayer;
+
+        public PreparationStatePopupPresenter OpenPreparationStatePopup(Action closedCallback = null)
+        {
+            PreparationStatePopupView view = ViewsFactory.Create<PreparationStatePopupView>(ViewsIDs.PreparationStatePopup, PopupLayer);
+
+            PreparationStatePopupPresenter popupPresenter = _contextpresentersFactory.CreatePreparationStatePopupPresenter(view);
+
+            OnPopupCreated(popupPresenter, view, closedCallback);
+
+            return popupPresenter;
+        }
 
         public WinPopupPresenter OpenWinPopup(Action closedCallback = null)
         {

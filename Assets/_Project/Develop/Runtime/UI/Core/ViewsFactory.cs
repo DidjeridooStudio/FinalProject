@@ -23,6 +23,9 @@ namespace Assets._Project.Develop.Runtime.UI.Core
             {ViewsIDs.DefeatPopup, "UI/DefeatPopup" },
             {ViewsIDs.HealthBar, "UI/HealthBar" },
             {ViewsIDs.SimpleHealthBar, "UI/SimpleHealthBar" },
+            {ViewsIDs.PreparationStatePopup, "UI/PreparationStatePopup" },
+            {ViewsIDs.UpgradableStatView, "UI/StatsUpgradePopup/UpgradableStatView" },
+            {ViewsIDs.StatsUpgradePopupView, "UI/StatsUpgradePopup/StatsUpgradePopupView" },
         };
 
         public ViewsFactory(ResourcesAssetsLoader resourcesAssetsLoader)
@@ -49,6 +52,11 @@ namespace Assets._Project.Develop.Runtime.UI.Core
         public void Release<TView>(TView view) where TView : MonoBehaviour, IView
         {
             Object.Destroy(view.gameObject);
+        }
+
+        internal T Create<T>(object upgradableStatView)
+        {
+            throw new NotImplementedException();
         }
     }
 }

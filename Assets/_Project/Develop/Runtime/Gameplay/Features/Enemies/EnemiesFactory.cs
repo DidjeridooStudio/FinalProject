@@ -1,6 +1,7 @@
 ﻿using Assets._Project.Develop.Runtime.Configs.Gameplay;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
+using Assets._Project.Develop.Runtime.Gameplay.Features.AI.States;
 using Assets._Project.Develop.Runtime.Gameplay.Features.TeamsFeature;
 using Assets._Project.Develop.Runtime.Infastructure.DI;
 using Assets._Project.Develop.Runtime.Utilies.Reactive;
@@ -39,6 +40,11 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Enemies
                 case BlowEntityConfig blowEntityConfig:
                     entity = _entitiesFactory.CreateBlowEntity(position, blowEntityConfig);
                     _brainsFactory.CreateBlowEntityBrain(entity);
+                    break;
+                case ShooterEntityConfig shooterEntityConfig:
+                    entity = _entitiesFactory.CreateShooterEntity(position, shooterEntityConfig);
+                    entity.AddCurrentTarget();
+                    _brainsFactory.CreateShooterEntityBrain(entity, shooterEntityConfig);
                     break;
                 default:
                     throw new ArgumentException($"Not support {config.GetType()} type of configs");

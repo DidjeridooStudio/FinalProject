@@ -1,6 +1,8 @@
 using Assets._Project.Develop.Runtime.Configs.Gameplay;
+using Assets._Project.Develop.Runtime.Configs.Gameplay.Abilities;
 using Assets._Project.Develop.Runtime.Configs.Gameplay.Levels;
 using Assets._Project.Develop.Runtime.Configs.Meta;
+using Assets._Project.Develop.Runtime.Configs.Meta.Stats;
 using Assets._Project.Develop.Runtime.Configs.Meta.Wallet;
 using Assets._Project.Develop.Runtime.Utilies.AssetsManagment;
 using System;
@@ -23,6 +25,11 @@ namespace Assets._Project.Develop.Runtime.Utilies.ConfigsManagment
         {typeof(GameLevelsListConfig), "Configs/Levels/GameLevelsListConfig" },
         {typeof(PlayerEntityConfig), "Configs/Entities/PlayerEntityConfig" },
         {typeof(MineEntityConfig), "Configs/Entities/MineEntityConfig" },
+        {typeof(ToxicPuddleConfig), "Configs/Entities/ToxicPuddleConfig" },
+        {typeof(TurretEntityConfig), "Configs/Entities/TurretEntityConfig" },
+        {typeof(ShooterEntityConfig), "Configs/Entities/ShooterEntityConfig" },
+        {typeof(PlayerStatsUpgradeConfig), "Configs/Stats/PlayerStatsUpgradeConfig" },
+        {typeof(StatsViewConfig), "Configs/Stats/StatsViewConfig" },
     };
 
         public ResourcesConfigsLoader(ResourcesAssetsLoader resourcesAssetsLoader)

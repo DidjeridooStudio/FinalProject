@@ -16,3 +16,4 @@ MonoBehaviour:
   <BlowRadius>k__BackingField: 4
   <BlowDamage>k__BackingField: 50
   <DeathProcessTime>k__BackingField: 0.3
+  <SpawnPrice>k__BackingField: 3

@@ -5,7 +5,6 @@ using Assets._Project.Develop.Runtime.Gameplay.Features.Blow;
 using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.StageFeature;
 using Assets._Project.Develop.Runtime.Infastructure.DI;
-using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
 using Assets._Project.Develop.Runtime.Utilies.Conditions;
 using Assets._Project.Develop.Runtime.Utilies.ConfigsManagment;
 using Assets._Project.Develop.Runtime.Utilies.Reactive;
@@ -33,9 +32,57 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI
             _entitiesLifeContext = _container.Resolve<EntitiesLifeContext>();
         }
 
+        public StateMachineBrain CreateTurretEntityBrain(Entity entity, ITargetSelector targetSelector)
+        {
+            AIStateMachine combatState = CreateAutoAttackStateMachine(entity);
+
+            AIStateMachine behaviour = new AIStateMachine();
+
+            behaviour.AddState(combatState);
+
+            FindTargetState findTargetState = new FindTargetState(targetSelector, _entitiesLifeContext, entity);
+
+            AIParallelState parallelState = new AIParallelState(findTargetState, behaviour);
+
+            AIStateMachine rootStateMachine = new AIStateMachine();
+            rootStateMachine.AddState(parallelState);
+
+            StateMachineBrain brain = new StateMachineBrain(rootStateMachine);
+            _brainsContext.SetFor(entity, brain);
+
+            return brain;
+        }
+
+        public StateMachineBrain CreateShooterEntityBrain(Entity entity, ShooterEntityConfig shooterEntityConfig)
+        {
+            AIStateMachine combatState = CreateAutoAttackStateMachine(entity);
+
+            TowerHolderService towerHolderService = _container.Resolve<TowerHolderService>();
+
+            entity.CurrentTarget.Value = towerHolderService.Tower;
+
+            MoveToTargetState movementState = new MoveToTargetState(entity, towerHolderService.Tower.Transform);
+
+            ICondition fromMovementToCombatStateCondition = new FuncCondition(() => (towerHolderService.Tower.Transform.position - entity.Transform.position).magnitude <= shooterEntityConfig.ShotDistance);
+
+            AIStateMachine behaviour = new AIStateMachine();
+
+            behaviour.AddState(movementState);
+            behaviour.AddState(combatState);
+
+            behaviour.AddTransition(movementState, combatState, fromMovementToCombatStateCondition);
+
+            StateMachineBrain brain = new StateMachineBrain(behaviour);
+            _brainsContext.SetFor(entity, brain);
+
+            return brain;
+        }
+
         public StateMachineBrain CreatePlayerEntityBrain(Entity entity)
         {
-            PlayerPreparationState playerPreparationState = new PlayerPreparationState(entity, _inputService);
+            PlayerPreparationState playerPreparationState = new PlayerPreparationState(entity, _inputService,
+                _container.Resolve<TowerHolderService>(),
+                _container.Resolve<EntitiesLifeContext>());
             PlayerBlowOnMouseClickState playerBlowOnMouseClickState = new PlayerBlowOnMouseClickState(entity, _inputService, _container.Resolve<RaycastOnMousePositionService>());
 
             IInputService inputService = _container.Resolve<IInputService>();
@@ -63,7 +110,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI
 
         public StateMachineBrain CreateBlowEntityBrain(Entity entity)
         {
-            ToweHolderService towerHolderService = _container.Resolve<ToweHolderService>();
+            TowerHolderService towerHolderService = _container.Resolve<TowerHolderService>();
 
             MoveToTargetState moveToTargetState = new MoveToTargetState(entity, towerHolderService.Tower.Transform);
 

@@ -1,13 +1,16 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.Features.StageFeature;
+using Assets._Project.Develop.Runtime.Gameplay.Features.Tower;
 using Assets._Project.Develop.Runtime.Gameplay.Infastructure;
 using Assets._Project.Develop.Runtime.Infastructure.DI;
 using Assets._Project.Develop.Runtime.UI.CommonViews;
 using Assets._Project.Develop.Runtime.UI.Core;
 using Assets._Project.Develop.Runtime.UI.Core.CheckProgressPopup;
 using Assets._Project.Develop.Runtime.UI.GamePlay.HealthPresenter;
+using Assets._Project.Develop.Runtime.UI.GamePlay.PreparationStatePopup;
 using Assets._Project.Develop.Runtime.UI.GamePlay.ResultsPopups;
 using Assets._Project.Develop.Runtime.UI.GamePlay.Stages;
+using Assets._Project.Develop.Runtime.Utilies.ConfigsManagment;
 using Assets._Project.Develop.Runtime.Utilies.CoroutinesManagment;
 using Assets._Project.Develop.Runtime.Utilies.ScenesManagment;
 
@@ -16,6 +19,15 @@ namespace Assets._Project.Develop.Runtime.UI.GamePlay
     public class GameplayPresentersFactory
     {
         private readonly DIContainer _container;
+
+        public PreparationStatePopupPresenter CreatePreparationStatePopupPresenter(PreparationStatePopupView view)
+        {
+            return new PreparationStatePopupPresenter(
+                _container.Resolve<ICoroutinesPerformer>(),
+                view,
+                _container.Resolve<ConfigsProviderService>(),
+                _container.Resolve<PlayerHolderService>());
+        }
 
         public EntitiesHealthDisplayPresenter CreateEntitiesHealthDisplayPresenter(EntitiesHealthDisplay view)
         {

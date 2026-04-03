@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: GameLevelConfig 1
   m_EditorClassIdentifier: 
   <TowerPrefabPath>k__BackingField: Entities/TowerEntity
-  <TowerHealth>k__BackingField: 100
+  <TowerHealth>k__BackingField: 1000
   <TowerPosition>k__BackingField: {x: 0, y: 0, z: -10}
   <GoldWinReward>k__BackingField: 15
+  <DiamondWinReward>k__BackingField: 5
   _stageConfigs:
-  - {fileID: 11400000, guid: 0cecdebd37e0c4645ba70400bf9669de, type: 2}
-  - {fileID: 11400000, guid: 0cecdebd37e0c4645ba70400bf9669de, type: 2}
+  - {fileID: 11400000, guid: f41f3a1e7dabe7e4b9f8198dcbf75d0e, type: 2}
+  - {fileID: 11400000, guid: 720752b99ffb972498987b8bae31d35c, type: 2}
   - {fileID: 11400000, guid: 0cecdebd37e0c4645ba70400bf9669de, type: 2}
