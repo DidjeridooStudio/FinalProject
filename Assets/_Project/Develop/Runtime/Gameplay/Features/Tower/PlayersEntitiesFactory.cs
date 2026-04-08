@@ -70,6 +70,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Tower
 
             _entitiesLifeContext.Add(entity);
 
+            _brainsFactory.CreateToxicPuddleEntityBrain(entity);
+
             return entity;
         }
 

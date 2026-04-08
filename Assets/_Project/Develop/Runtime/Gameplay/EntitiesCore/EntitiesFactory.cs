@@ -212,7 +212,18 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddContactsDetectingMask(Layers.CharactersMask)
                 .AddContactsColliderBuffer(new Buffer<Collider>(64))
                 .AddContactsEntitiesBuffer(new Buffer<Entity>(64))
-                .AddBodyContactDamage(new ReactiveVariable<float>(config.Damage));
+                .AddBodyContactDamage(new ReactiveVariable<float>(config.Damage))
+                .AddAttackProcessInitialTime(new ReactiveVariable<float>(config.AttackProcessTime))
+                .AddAttackProcessCurrentTime()
+                .AddInAttackProcess()
+                .AddStartAttackRequest()
+                .AddStartAttackEvent()
+                .AddEndAttackEvent()
+                .AddAttackDelayTime(new ReactiveVariable<float>(config.AttackDelayTime))
+                .AddAttackDelayEndEvent()
+                .AddInAttackCooldown()
+                .AddAttackCooldownInitialTime(new ReactiveVariable<float>(config.AttackCooldown))
+                .AddAttackCooldownCurrentTime();
 
             ICompositeCondition mustSelfRelease = new CompositeCondition()
                 .Add(new FuncCondition(() => entity.IsDead.Value));
@@ -220,13 +231,24 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             ICompositeCondition mustDie = new CompositeCondition()
                 .Add(new FuncCondition(() => entity.IsDead.Value));
 
+            ICompositeCondition canStartAttack = new CompositeCondition()
+                .Add(new FuncCondition(() => entity.IsDead.Value == false))
+                .Add(new FuncCondition(() => entity.InAttackProcess.Value == false))
+                .Add(new FuncCondition(() => entity.InAttackCooldown.Value == false));
+
             entity
                 .AddMustDie(mustDie)
-                .AddMustSelfRelease(mustSelfRelease);
+                .AddMustSelfRelease(mustSelfRelease)
+                .AddCanStartAttack(canStartAttack);
 
             entity.AddSystem(new BodyContactsDetectingSystem());
             entity.AddSystem(new BodyContactsEntitiesFilterSystem(_collidersRegistryService));
-            entity.AddSystem(new DealDamageOnContactSystem());
+            entity.AddSystem(new StartAttackSystem());
+            entity.AddSystem(new AttackProcessTimerSystem());
+            entity.AddSystem(new AttackDelayEndTriggerSystem());
+            entity.AddSystem(new DealDamageToContactSystem());
+            entity.AddSystem(new EndAttackSystem());
+            entity.AddSystem(new AttackCooldownTimerSystem());
             entity.AddSystem(new DeathAfterClearAllEnemiesStage());
             entity.AddSystem(new DeathSystem());
             entity.AddSystem(new SelfReleaseSystem(_entitiesLifeContext));

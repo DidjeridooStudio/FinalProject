@@ -6,7 +6,6 @@ using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.StageFeature;
 using Assets._Project.Develop.Runtime.Infastructure.DI;
 using Assets._Project.Develop.Runtime.Utilies.Conditions;
-using Assets._Project.Develop.Runtime.Utilies.ConfigsManagment;
 using Assets._Project.Develop.Runtime.Utilies.Reactive;
 using Assets._Project.Develop.Runtime.Utilies.Timer;
 using System;
@@ -30,6 +29,20 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI
             _brainsContext = _container.Resolve<AIBrainsContext>();
             _inputService = _container.Resolve<IInputService>();
             _entitiesLifeContext = _container.Resolve<EntitiesLifeContext>();
+        }
+
+        public StateMachineBrain CreateToxicPuddleEntityBrain(Entity entity)
+        {
+            AttackTriggerOnBodyContactState attackTriggerOnBodyContactState = new AttackTriggerOnBodyContactState(entity);
+
+            AIStateMachine behaviour = new AIStateMachine();
+
+            behaviour.AddState(attackTriggerOnBodyContactState);
+
+            StateMachineBrain brain = new StateMachineBrain(behaviour);
+            _brainsContext.SetFor(entity, brain);
+
+            return brain;
         }
 
         public StateMachineBrain CreateTurretEntityBrain(Entity entity, ITargetSelector targetSelector)
